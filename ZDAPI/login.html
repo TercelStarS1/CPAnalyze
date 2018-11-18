@@ -65,10 +65,9 @@
 	    }
 	    ele.className = newClass.replace(/^\s+|\s+$/g, '');
 	  }
-	}
-
+	} 
 	if (!localStorage.getItem("bottomhtml")) {
-	    var bottomhtml = "<footer class='main-footer'><div class='pull-right hidden-xs'><b>Version</b> 1.0.0</div><strong>Copyright &copy; 2018-2020 <a href='#'>正大东南十省</a>.</strong> All rights reserved.</footer><aside class='control-sidebar control-sidebar-dark'><ul class='nav nav-tabs nav-justified control-sidebar-tabs'><li><a href='#control-sidebar-home-tab' data-toggle='tab'><i class='fa fa-home'></i></a></li></ul><div class='tab-content'><div class='tab-pane' id='control-sidebar-home-tab'></div></div></aside><div class='control-sidebar-bg'></div>";
+	    var bottomhtml = "<footer class='main-footer'><div class='pull-right hidden-xs'><b>Version</b> 1.0.0</div><strong>Copyright &copy; 2018-2020 <a href='#'>正大东南十省</a>.</strong> All rights reserved.</footer><aside class='control-sidebar control-sidebar-dark'><ul class='nav nav-tabs nav-justified control-sidebar-tabs'><li><a href='#control-sidebar-home-tab' data-toggle='tab'><i class='fa fa-home'></i></a></li></ul><div class='tab-content'><div class='tab-pane' id='control-sidebar-home-tab'></div></div></aside><div class='control-sidebar-bg'></div><script src='../FXresource/dist/js/demo.js'>";
 	    localStorage.setItem('bottomhtml', bottomhtml);
 	} 
 	if (!localStorage.getItem("headerhtml")) {
@@ -78,7 +77,8 @@
 
 	localStorage.setItem('dhcontent', "");   //导航栏内容
 	localStorage.setItem('changepwd', "");   //修改密码弹窗
-	localStorage.setItem('loginUser', "");   //登陆用户信息
+	localStorage.setItem('loginUser', "");   //登陆用户信息 
+	localStorage.setItem('companyData', ""); //可以查看公司信息
 	$(".login-button").click(function () {
 	    var username = $("#txtname").val();
 	    var userpwd = $("#txtpwd").val();
@@ -88,15 +88,15 @@
 	        url: "/api/Account/UserLogin",
 	        dataType: 'json',
 	        data: { CODE: username, PASSWORD: userpwd },
-	        success: function (data) { 
+	        success: function (data) {
+	            var companyData = data.data2; 
 	            if (data.num == 1) {
 	                alert("用户名或密码错误，请重新输入");
 	                removeClass(document.querySelector(".login"), "active")
 	                removeClass(document.querySelector(".sk-rotating-plane"), "active")
 	                document.querySelector(".login").style.display = "block"
 	            }
-	            else {
-
+	            else { 
 	                var dh = "<section class='sidebar'> " +
                         "    <ul class='sidebar-menu'> " +
                         "        <li class='treeview'> " +
@@ -122,6 +122,13 @@
 	                localStorage.setItem('dhcontent', dh);
 	                localStorage.setItem('changepwd', changepwd);
 	                localStorage.setItem('loginUser', data.skin); 
+	                $.cookie('loginUser', data.skin);
+	                var company = ""; 
+	                for (var i = 0; i < companyData.length; i++) {
+	                    company += "<option value='" + companyData[i].CODE + "'>" + companyData[i].NAME+ "</option>";
+	                } 
+	                localStorage.setItem('companyData', company);
+                     
 	                setTimeout(function () {
 	                    removeClass(document.querySelector(".login"), "active")
 	                    removeClass(document.querySelector(".sk-rotating-plane"), "active")

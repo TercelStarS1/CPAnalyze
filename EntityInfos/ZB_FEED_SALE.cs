@@ -57,6 +57,8 @@ namespace EntityInfos
         public string CUSTOMERValue { get; set; }
 
         public string SalesName { get; set; }
+
+        public int RN { get; set; }
     }
     /// <summary>
     /// 搜索模型

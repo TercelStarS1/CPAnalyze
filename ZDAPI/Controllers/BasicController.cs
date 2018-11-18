@@ -19,7 +19,7 @@ namespace ZDAPI.Controllers
     { 
         public T data { get; set; }
 
-        public T date2 { get; set; }
+        public T data2 { get; set; }
     } 
 
     public class BasicController: ApiController
@@ -59,10 +59,21 @@ namespace ZDAPI.Controllers
             message.num = num;
             message.skin = skin;
             message.data = data;
-            message.date2 = data2;
+            message.data2 = data2;
             return Ok(message);
         }
 
+        public IHttpActionResult Succeed<T>(T data, T data2, int num, string skin, string remark)
+        {
+            ResultMessage<T> message = new ResultMessage<T>();
+            message.code = 1;
+            message.message = "succeed";
+            message.num = num;
+            message.skin = skin;
+            message.data = data;
+            message.data2 = data2;
+            return Ok(message);
+        }
 
         public IHttpActionResult Succeed<T>(T data, int num, string skin,string remark)
         {

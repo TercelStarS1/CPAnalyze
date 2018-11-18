@@ -45,14 +45,17 @@ namespace WebAPI.Controllers
                 string userName = info.CODE.Trim();
                 if (userName =="admin")
                 {
-                    return Succeed("返回可以访问的路径", 0, "超级管理员","0");
+                    var query = db.ZB_FEED_COMPANY.AsQuery().ToList() ;
+                    //return Succeed("返回可以访问的路径", "返回所有的可以看得公司列表", "超级管理员","0"); 
+                    return Succeed(query, query,0, "超级管理员", "0");
                 }
                 string _password = info.PASSWORD;// MD51.StrMD5(passwordStr + info.PASSWORD); 
                 var user = db.ZB_FEED_COMPANY.AsQuery().Where(w => w.CODE == userName && w.PASSWORD == _password).ToList();
 
                 if (user.Count == 1)
-                {
-                    return Succeed("返回可以访问的路径", 0, user[0].NAME, user[0].CODE);
+                { 
+                   // var query = db.ZB_FEED_COMPANY.AsQuery().Where(r=>r.CODE== user[0].CODE);
+                    return Succeed(user, user, 0, user[0].NAME, user[0].CODE);
                 }
                 else
                 {

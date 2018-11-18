@@ -96,3 +96,15 @@ E:\ZD\ZDFX\SZHelpers\bin\Debug\NPOI.OpenXml4Net.dll
 E:\ZD\ZDFX\SZHelpers\obj\Debug\Helpers.dll
 E:\ZD\ZDFX\SZHelpers\obj\Debug\Helpers.pdb
 E:\ZD\ZDFX\SZHelpers\obj\Debug\Helpers_4.5.csprojResolveAssemblyReference.cache
+E:\ZD\ZDFXYM\SZHelpers\bin\Debug\ICSharpCode.SharpZipLib.dll
+E:\ZD\ZDFXYM\SZHelpers\bin\Debug\itextsharp.dll
+E:\ZD\ZDFXYM\SZHelpers\bin\Debug\itextsharp.pdfa.dll
+E:\ZD\ZDFXYM\SZHelpers\bin\Debug\NPOI.OpenXmlFormats.dll
+E:\ZD\ZDFXYM\SZHelpers\bin\Debug\Helpers.dll
+E:\ZD\ZDFXYM\SZHelpers\bin\Debug\Helpers.pdb
+E:\ZD\ZDFXYM\SZHelpers\bin\Debug\NPOI.dll
+E:\ZD\ZDFXYM\SZHelpers\bin\Debug\NPOI.OOXML.dll
+E:\ZD\ZDFXYM\SZHelpers\bin\Debug\NPOI.OpenXml4Net.dll
+E:\ZD\ZDFXYM\SZHelpers\obj\Debug\Helpers.dll
+E:\ZD\ZDFXYM\SZHelpers\obj\Debug\Helpers.pdb
+E:\ZD\ZDFXYM\SZHelpers\obj\Debug\Helpers_4.5.csprojResolveAssemblyReference.cache

@@ -34,3 +34,15 @@ E:\ZD\ZDFX\SZORM-master\bin\Debug\System.Xml.Linq.dll
 E:\ZD\ZDFX\SZORM-master\obj\Debug\SZORM.dll
 E:\ZD\ZDFX\SZORM-master\obj\Debug\SZORM.pdb
 E:\ZD\ZDFX\SZORM-master\obj\Debug\SZORM_4.5.csprojResolveAssemblyReference.cache
+E:\ZD\ZDFXYM\SZORM-master\bin\Debug\SZORM.dll
+E:\ZD\ZDFXYM\SZORM-master\bin\Debug\SZORM.pdb
+E:\ZD\ZDFXYM\SZORM-master\bin\Debug\Microsoft.CSharp.dll
+E:\ZD\ZDFXYM\SZORM-master\bin\Debug\System.Configuration.dll
+E:\ZD\ZDFXYM\SZORM-master\bin\Debug\System.Data.DataSetExtensions.dll
+E:\ZD\ZDFXYM\SZORM-master\bin\Debug\System.Data.dll
+E:\ZD\ZDFXYM\SZORM-master\bin\Debug\System.dll
+E:\ZD\ZDFXYM\SZORM-master\bin\Debug\System.Xml.dll
+E:\ZD\ZDFXYM\SZORM-master\bin\Debug\System.Xml.Linq.dll
+E:\ZD\ZDFXYM\SZORM-master\obj\Debug\SZORM.dll
+E:\ZD\ZDFXYM\SZORM-master\obj\Debug\SZORM.pdb
+E:\ZD\ZDFXYM\SZORM-master\obj\Debug\SZORM_4.5.csprojResolveAssemblyReference.cache

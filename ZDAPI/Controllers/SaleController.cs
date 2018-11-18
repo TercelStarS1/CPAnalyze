@@ -33,45 +33,16 @@ namespace WebAPI.Controllers
         public IHttpActionResult CustomerNewAll(ZB_FEED_CUSTOMER info)
         {
             using (StarOracle db = new StarOracle())
-            {
-                
+            { 
                 string startDate = DateTime.Now.AddDays(info.Num).ToShortDateString();  
-                var sqlNum = "select COMPANY,name,Num from ( select count(customer) num , company from " +
-                    " (select * from(select bbb.*, row_number() over(partition by customer, company order by doc_date) cn from zb_feed_sale bbb where customer not like '9%')" +
-                    " where doc_date > to_date('"+sss+"', 'YYYY/MM/DD') and cn = 1)" +
-                    " where doc_date > to_date('"+ startDate + "', 'YYYY/MM/DD')  group by company) t1 join ZB_FEED_COMPANY t2 on(t1.company = t2.code)";
-                 
+                
+                var sqlNum = "select COMPANY,name,Num from( select count(customer) num , company from  (select * from(select customer, company,min(doc_date) doc_date from zb_feed_sale " +
+                    " where customer not like '9%' group by customer, company ) "+
+                    " ) where doc_date > to_date('" + startDate + "', 'YYYY/MM/DD')  group by company ) t1 join ZB_FEED_COMPANY t2 on(t1.company = t2.code)";
 
                 var query = db.ExecuteSqlToList<ZB_FEED_CUSTOMER>(sqlNum).ToList();
                 int num = query.Sum(g => g.Num); 
                 return Succeed(query, num, "");
-            }
-        }
-
-        /// <summary>
-        /// 获取某个时间段内该公司所有新客户数量
-        /// </summary>
-        /// <param name="info"></param>
-        /// <returns></returns>
-        [HttpPost]
-        public IHttpActionResult SalesNumAll(ZB_FEED_CUSTOMER info)
-        {
-            using (StarOracle db = new StarOracle())
-            {
-                string company = info.COMPANY; //公司ID
-                string startDate = info.startDate.ToShortDateString();
-                string endDate = info.endDate.ToShortDateString();
-                var sqlNum = "select count(salesperson) from (select salesperson, count(salesperson) num ,sum(wgt) CUSTOMERValue from (  "+
-                " select ccc.*,row_number() over(partition by  customer, company order by eff_date desc) cn from  (" +
-                " select aaa.salesperson, aaa.customer, aaa.company, aaa.eff_date, bbb.doc_date, bbb.wgt from zb_feed_salesp_cust aaa join" +
-                " (select * from (select bbb.*, row_number() over(partition by customer, company order by doc_num) cn from zb_feed_sale bbb where company = '" + company + "' and customer not like '9%') where cn = 1 and doc_date > to_date('"+ sss + "', 'YYYY/MM/DD')) " +
-                " bbb on(aaa.customer = bbb.customer and aaa.company = bbb.company and aaa.eff_date <= bbb.doc_date)  ) ccc ) " +
-                " where cn = 1 and doc_date between to_date('" + startDate + "', 'yyyy-mm-dd')  and to_date('" + endDate + "', 'yyyy-mm-dd')  group by salesperson order by num desc ,CUSTOMERValue desc)";
-
-                string allnum = db.ExecuteScalar(sqlNum).ToString();  //获取总数据条数
-
-
-                return Succeed(allnum);
             }
         } 
 
@@ -100,9 +71,13 @@ namespace WebAPI.Controllers
                     " bbb on(aaa.customer = bbb.customer and aaa.company = bbb.company and aaa.eff_date <= bbb.doc_date)  ) ccc ) " +
                     " where cn = 1 and doc_date between to_date('"+ startDate + "', 'yyyy-mm-dd')  and to_date('" + endDate + "', 'yyyy-mm-dd')  group by salesperson order by num desc ,CUSTOMERValue desc  ) " +
                     " ddd left join zb_feed_salesperson fff on(ddd.salesperson = fff.code) and fff.company = '"+ company + "' order by num desc, CUSTOMERValue desc " +
-                    " ) where rn >" + startNUM + " and rn<=" + endNUM;
+                    " ) ";
 
                 var query = db.ExecuteSqlToList<ZB_FEED_CUSTOMER>(sqlNum);
+                int num = query.Count();
+
+                query = query.Where(s => s.RN > startNUM & s.RN <= endNUM);
+
                 List<ZB_FEED_CUSTOMER> result = query.ToList();
                 num5sales = "";
                 foreach (var ZB_FEED_CUSTOMER in result)
@@ -110,7 +85,7 @@ namespace WebAPI.Controllers
                     num5sales += "'" + ZB_FEED_CUSTOMER.CODE + "',";
                 }
                 num5sales = (num5sales.Length > 1) ? num5sales.Substring(0, num5sales.Length - 1) : "";
-                return Succeed(result);
+                return Succeed(result, num, "");
             }
         }
 
@@ -497,9 +472,12 @@ namespace WebAPI.Controllers
                       " (select  customer from(select  distinct customer from zb_feed_sale where company = '" + company + "' and  doc_date > to_date('" + beginDate + "', 'yyyy-mm-dd'))aaa" +
                       "  where customer not in (select distinct customer  from zb_feed_sale where company = '" + company + "' and doc_date > to_date('" + startDate + "', 'yyyy-mm-dd')) and customer not like '9%' " +
                       "  ) and bbb.company = '" + company + "' and bbb.doc_date > to_date('" + beginDate + "', 'yyyy-mm-dd')  order by bbb.customer, bbb.company, bbb.doc_date desc ) where cn = 1 ) bbb on(aaa.customer = bbb.customer and aaa.company = bbb.company and aaa.eff_date <= bbb.doc_date)   )ccc ) where cn = 1  group by salesperson order by num desc )   ) a1 join zb_feed_salesperson a2 on(a1.salesperson = a2.code) and " +
-                      " a2.company = '" + company + "'  where rn >" + startNUM + " and rn<=" + endNUM + " order by a1.rn";
+                      " a2.company = '" + company + "' order by a1.rn";   //+ "'  where rn >" + startNUM + " and rn<=" + endNUM 
 
                 var query = db.ExecuteSqlToList<ZB_FEED_CUSTOMER>(sqlNum);
+                int num = query.Count();
+
+                query = query.Where(s => s.RN > startNUM  & s.RN<= endNUM);
                 List<ZB_FEED_CUSTOMER> result = query.ToList();
                 num5saleslost = "";
                 foreach (var ZB_FEED_CUSTOMER in result)
@@ -507,7 +485,9 @@ namespace WebAPI.Controllers
                     num5saleslost += "'" + ZB_FEED_CUSTOMER.CODE + "',";
                 }
                 num5saleslost = (num5saleslost.Length > 1) ? num5saleslost.Substring(0, num5saleslost.Length - 1) : "";
-                return Succeed(result);
+                
+
+                return Succeed(result,num,"");
             }
         }
 

@@ -46,7 +46,7 @@
             </section>
         </div> 
     </div> 
-
+  
     <script type="text/javascript"> 
         
         //日期控件  默认三个月 
@@ -69,7 +69,10 @@
         var pageshownum = 4;  //每页展示数据量
         var numall  = 0;   //总数据量
         var jgdate = "1";
-         
+        var skincompany = "";
+        var stime;
+        var etime;
+
         //查询
         $("#btn_search").click(function () {
             jgdate = DateMinus($("#startDate").val(), $("#endDate").val());
@@ -85,53 +88,21 @@
             if (jgdate < 1) {
                 alert("开始日期必须小于结束日期");
                 return;
-            } 
-            GetCustomer();
-        });
-        //获取公司列表
-        $.ajax({
-            type: "Post",
-            url: "/api/Customer/CompanyList",
-            dataType: 'json',  
-            data: {  },
-            success: function (data) {
-                data = data.data;
-                for (var i = 0; i < data.length; i++) {
-                    var option = $("<option>").val(data[i].CODE).text(data[i].NAME);
-                    $("#selectCompany").append(option);
-                }
-                GetCustomer(); 
-                jgdate = DateMinus($("#startDate").val(), $("#endDate").val()); 
             }
+            skincompany = $('#selectCompany option:selected').val();
+            stime = $("#startDate").val();
+            etime = $("#endDate").val();
+            GetNum5(1, pageshownum, 0, stime, etime);
         });
-
-        //根据该事件段内总客户数
-        function GetCustomer() {
-            if (!xval) {
-                GetAjaxLoad("", "");
-            }
-            $.ajax({
-                type: "Post",
-                url: "/api/Customer/CustomerNumByPage",
-                dataType: 'json',
-                data: { startDate: $("#startDate").val(), endDate: $("#endDate").val(), CUSTOMERValue: $('#selectCompany option:selected').val() },
-                success: function (data) { 
-                    numall = data.data;
-                    if (numall != 0) {
-                        GetNum5(1, pageshownum, numall);
-                    }
-                    else {
-                        if (xval) {
-                            xval.remove();
-                            xval = null;
-                        }
-                    } 
-                }
-            });
-        }
+ 
+         
+        jgdate = DateMinus(GetDateByMonth(GetNowDate(), 3), GetNowDate());
+        $("#selectCompany").html(localStorage.getItem('companyData'));
+        skincompany = $('#selectCompany option:selected').val();
+        GetNum5(1, pageshownum, 0, GetDateByMonth(GetNowDate(), 3), GetNowDate());
 
         //获取当前页展示客户编码列表
-        function GetNum5(n1, n2, n3) {   //当前页码，每页显示数量，当前显示页面 数据总量
+        function GetNum5(n1, n2, n3, startDate, endDate) {   //当前页码，每页显示数量，当前显示页面 数据总量
             if (!xval) {
                 GetAjaxLoad("", "");
             }
@@ -141,9 +112,18 @@
             $.ajax({
                 type: "Post",
                 url: "/api/Customer/CustomerShowByPage",
-                data: { startDate: $("#startDate").val(), endDate: $("#endDate").val(), CUSTOMERValue: $('#selectCompany option:selected').val(), PageNum: n1, ShowNum: n2 },
+                data: { startDate: startDate, endDate: endDate, CUSTOMERValue: $('#selectCompany option:selected').val(), PageNum: n1, ShowNum: n2 },
                 dataType: "json",
                 success: function (data) {
+                    n3 = data.num;
+                    if (n3 == 0) {
+                        if (xval) {
+                            xval.remove();
+                            xval = null;
+                        }
+                        $("#divshow").html("<div class='text-center '> <h3>没有数据</h3> </div>");
+                        return;
+                    }
                     var allpage = Math.ceil(n3 / pageshownum);
                     ShowPage("#fyshow", n1, allpage, shownowpage);   //ul ID 当前选中页码 总页数 回调函数 
                     data = data.data; 
@@ -169,6 +149,13 @@
                     }
                     GetTB(); 
                     
+                }
+                ,
+                error: function () {
+                    if (xval) {
+                        xval.remove();
+                        xval = null;
+                    }
                 }
             })
         } 
@@ -234,20 +221,27 @@
                             num5.push(num11);
                         }
                     } 
-                    $("#divshow").html("");
+                    $("#divshow").html(""); 
                     if (showName5 != "")
-                        ShowTB("container5", showName5, num5, '#7cb5ec', wgt5, maxnum); //8085e9
+                        ShowTB("container5", showName5, num5, '#7cb5ec', wgt5, maxnum);  
                     if (showName4 != "")
-                        ShowTB("container4", showName4, num4, '#8085e9', wgt4, maxnum);//2b908f
+                        ShowTB("container4", showName4, num4, '#8085e9', wgt4, maxnum); 
                     if (showName3 != "")
-                        ShowTB("container3", showName3, num3, '#8d4653', wgt3, maxnum);//fcaf17
+                        ShowTB("container3", showName3, num3, '#8d4653', wgt3, maxnum); 
                     if (showName2 != "")
-                        ShowTB("container2", showName2, num2, '#f7a35c', wgt2, maxnum);//84331f
+                        ShowTB("container2", showName2, num2, '#f7a35c', wgt2, maxnum); 
                     if (showName1 != "")
-                        ShowTB("container1", showName1, num1, '#e4d354', wgt1, maxnum);//008792
+                        ShowTB("container1", showName1, num1, '#e4d354', wgt1, maxnum); 
                     
                 }
-            }); 
+                ,
+                error: function () {
+                    if (xval) {
+                        xval.remove();
+                        xval = null;
+                    }
+                }
+            });
         }
 
         function ShowTB(id, showName, data, color, wgt, maxnum) {
@@ -314,8 +308,16 @@
         }
     
         //显示当前页内容
-        function shownowpage(page) { 
-            GetNum5(page, pageshownum, numall);
+        function shownowpage(page) {   
+            if (skincompany != $('#selectCompany option:selected').val() || stime != $("#startDate").val() || etime != $("#endDate").val()) {
+                page = 1;
+                jgdate = DateMinus($("#startDate").val(), $("#endDate").val());
+                stime = $("#startDate").val(); etime = $("#endDate").val();
+                GetNum5(page, pageshownum, numall, stime, etime);
+            }
+            else {
+                GetNum5(page, pageshownum, numall, stime, etime);
+            }
         }
 
         

@@ -40,6 +40,8 @@ namespace EntityInfos
         public string Customer { get; set; }
 
         public string Salesperson { get; set; }
+
+        public int RN { get; set; }
     }
     /// <summary>
     /// 搜索模型

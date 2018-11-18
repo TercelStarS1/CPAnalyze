@@ -4,8 +4,11 @@ $("#contentdiv").after(localStorage.getItem('bottomhtml'));
 $(".main-header").after(localStorage.getItem('changepwd'));
 $("#dhdiv").html(localStorage.getItem('dhcontent')); 
 $("#loginUser").html(localStorage.getItem('loginUser'));
+
 //判断是否登陆，没有登陆直接T出去
-if (!localStorage.getItem('loginUser')) {
+console.log($.cookie('loginUser'));
+console.log(localStorage.getItem('loginUser'));
+if (localStorage.getItem('loginUser') != $.cookie('loginUser')) {
     window.location.href = "/login.html"
 }
  
