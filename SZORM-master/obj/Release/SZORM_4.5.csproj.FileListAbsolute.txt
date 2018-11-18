@@ -1,0 +1,11 @@
+F:\ZD\YGFZ\SZORM-master\bin\Release\SZORM.dll
+F:\ZD\YGFZ\SZORM-master\bin\Release\SZORM.pdb
+F:\ZD\YGFZ\SZORM-master\bin\Release\Microsoft.CSharp.dll
+F:\ZD\YGFZ\SZORM-master\bin\Release\System.Configuration.dll
+F:\ZD\YGFZ\SZORM-master\bin\Release\System.Data.DataSetExtensions.dll
+F:\ZD\YGFZ\SZORM-master\bin\Release\System.Data.dll
+F:\ZD\YGFZ\SZORM-master\bin\Release\System.dll
+F:\ZD\YGFZ\SZORM-master\bin\Release\System.Xml.dll
+F:\ZD\YGFZ\SZORM-master\bin\Release\System.Xml.Linq.dll
+F:\ZD\YGFZ\SZORM-master\obj\Release\SZORM.dll
+F:\ZD\YGFZ\SZORM-master\obj\Release\SZORM.pdb

@@ -1,0 +1,50 @@
+﻿<header class="main-header">
+    <a href="Start.html" class="logo">
+        <span class="logo-mini"><img style="width:35px;" src="../FXresource/login/img/zd.jpg" /></span>
+        <span class="logo-lg"><img style="width:35px;" src="../FXresource/login/img/zd.jpg" /><b> 工作</b>平台</span>
+    </a>
+    <nav class="navbar navbar-static-top">
+        <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+            <span class="sr-only">Toggle navigation</span>
+        </a>
+        <div class="navbar-custom-menu">
+            <ul class="nav navbar-nav">
+                <li class="dropdown user user-menu">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <img src="../FXresource/dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
+                        <span class="hidden-xs" id="loginUser"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li class="user-footer">
+                            <div class="pull-left">
+                                <a href="#" data-toggle="modal" data-target="#changePWD" class="btn btn-default btn-flat">修改密码</a>
+                            </div>
+                            <div class="pull-right">
+                                <a href="../login.html" id="loginoutbtn" class="btn btn-default btn-flat">退出系统</a>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>
+<aside class="main-sidebar" id="dhdiv"></aside> 
+
+<script type="text/javascript">
+
+ $("#dhdiv").html(sessionStorage.getItem('dhcontent'));
+        $("#loginUser").html(sessionStorage.getItem('loginUser'));
+        $(".main-header").after(sessionStorage.getItem('changepwd'));
+        $(".sidebar li a").each(function (index) {
+            if ($(this).text() == $("#showaction").text()) {
+                $("title").html("工作平台 - " + $(this).text());
+                $(this).parent().attr("class", "active");
+                $(this).parents("li").addClass("active");
+                return;
+            }
+        })  
+</script>

@@ -1,0 +1,131 @@
+﻿<!DOCTYPE html>
+<html> 
+<head>
+    <title></title>
+    <link rel="import" href="TemplateHead.html" >
+</head>
+
+<body class="hold-transition skin-blue sidebar-mini">
+    <div class="wrapper">  
+        <div class="content-wrapper" id="contentdiv">
+            <section class="content-header" style="border-bottom:2px solid grey;">
+                <h1 id="showaction">开发能力总览</h1>
+                <ol class="breadcrumb">
+                    <li>
+                        <a href="StarHome.html"><i class="fa fa-dashboard"></i> 主页</a>
+                    </li>
+                    <li class="active">业务员分析</li>
+
+                </ol>
+            </section>
+            <div class="pad margin no-print" style="padding-bottom:0px; margin-bottom:0px;">
+                
+            </div>
+            <section class="content" style="display:flex;"> 
+                <div  class="col-md-12" style="display:flex;">
+                    <div id="divshow1"  class="col-md-6" style="height:550px;"></div>
+                    <div id="divshow2"  class="col-md-6" style="height:550px;"></div> 
+                </div>  
+            </section>
+        </div> 
+    </div>    
+    <script type="text/javascript">
+          
+        if (!xval) {
+            GetAjaxLoad("", "");
+        } 
+        //获取公司列表
+        $.ajax({
+            type: "Post",
+            url: "/api/Sale/CustomerNewAll",
+            dataType: 'json',
+            data: { Num: -90 },
+            success: function (data) { 
+                var num = data.num;
+                var soursedate = new Array();  //时间跨度
+                data = data.data; 
+                for (var i = 0; i < data.length; i++) {
+                    var abc = {
+                        name: data[i]["NAME"] +" 开发新客户（个）", 
+                        code: data[i]["COMPANY"],
+                        y: data[i]["Num"] 
+                    };
+                    soursedate.push(abc);
+                    ShowTB('divshow1', soursedate, "近3个月开发新客户总量图", num);
+                }
+                if (xval) {
+                    xval.remove();
+                    xval = null;
+                }
+            }
+        });
+        $.ajax({
+            type: "Post",
+            url: "/api/Sale/CustomerNewAll",
+            dataType: 'json',
+            data: { Num: -180 },
+            success: function (data) {
+                var soursedate = new Array();  //时间跨度
+                var num = data.num;
+                data = data.data;
+                for (var i = 0; i < data.length; i++) {
+                    var abc = {
+                        name: data[i]["NAME"] + " 开发新客户（个）",
+                        code: data[i]["COMPANY"],
+                        y: data[i]["Num"]
+                    };
+                    soursedate.push(abc); 
+                    ShowTB('divshow2', soursedate, "近6个月开发新客户总量图", num);
+                }
+                if (xval) {
+                    xval.remove();
+                    xval = null;
+                }
+            }
+        });
+        function ShowTB(id, data, name, num) {  
+            Highcharts.chart(id, {
+                chart: {
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false,
+                    type: 'pie'
+                },
+                title: {
+                    text: name
+                }, 
+                subtitle: {
+                    text: '开发新客户总数(个)：' + num
+                },
+                exporting: {
+                    enabled: false //用来设置是否显示‘打印’,'导出'等功能按钮，不设置时默认为显示
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.y}</b>'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            format: '<b>{point.name}</b>: {point.y}',
+                            style: {
+                                color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                            }
+                        },
+                        events: {
+                            click: function (e) {console.log(e.point.code);}    
+                        }
+                    }
+                },
+                series: [{
+                    name: ' ',
+                    colorByPoint: true,
+                    data: data
+                }]
+            }); 
+        } 
+     </script>
+</body>
+</html>
