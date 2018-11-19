@@ -40,6 +40,10 @@ namespace EntityInfos
         public string Customer { get; set; }
 
         public string Salesperson { get; set; }
+        /// <summary>
+        /// 销售地区
+        /// </summary>
+        public string Salesarea { get; set; }
 
         public int RN { get; set; }
     }

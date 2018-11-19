@@ -79,6 +79,7 @@
 	localStorage.setItem('changepwd', "");   //修改密码弹窗
 	localStorage.setItem('loginUser', "");   //登陆用户信息 
 	localStorage.setItem('companyData', ""); //可以查看公司信息
+	$.cookie('loginUser', "");
 	$(".login-button").click(function () {
 	    var username = $("#txtname").val();
 	    var userpwd = $("#txtpwd").val();
@@ -104,8 +105,10 @@
                         "            <ul class='treeview-menu'> " +
                         "                <li> <a href='Start.html'><i class='fa fa-circle-o'></i>开发能力总览</a> </li> " +
                         "                <li> <a href='StarHome.html'><i class='fa fa-circle-o'></i>开发能力分析</a> </li> " +
-                        "                <li style='display:none;'> <a href='CustomerLost.html'><i class='fa fa-circle-o'></i>暂停提货分析1</a> </li> " +
                         "                <li ><a href='CustomerLostNew.html'><i class='fa fa-circle-o'></i>暂停提货分析</a></li> " +
+                        "                <li style='display:none;'> <a href='CustomerLost.html'><i class='fa fa-circle-o'></i>暂停提货分析1</a> </li> " +
+                        "                <li> <a href='AreaNum.html'><i class='fa fa-circle-o'></i>地区提货分析</a> </li> " +
+                        "                <li> <a href='AreaLost.html'><i class='fa fa-circle-o'></i>地区客户暂停</a> </li> " +
                         "            </ul> " +
                         "        </li> " +
                         "        <li class='treeview'> " +

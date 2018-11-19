@@ -4,14 +4,14 @@ $("#contentdiv").after(localStorage.getItem('bottomhtml'));
 $(".main-header").after(localStorage.getItem('changepwd'));
 $("#dhdiv").html(localStorage.getItem('dhcontent')); 
 $("#loginUser").html(localStorage.getItem('loginUser'));
-
-//判断是否登陆，没有登陆直接T出去
-console.log($.cookie('loginUser'));
-console.log(localStorage.getItem('loginUser'));
-if (localStorage.getItem('loginUser') != $.cookie('loginUser')) {
-    window.location.href = "/login.html"
-}
  
+if (localStorage.getItem('loginUser') != $.cookie('loginUser')  ) {
+    window.location.href = "/login.html";
+}
+if (!$.cookie('loginUser'))
+{
+    window.location.href = "/login.html";
+}
 $(".sidebar li a").each(function (index) {
     if ($(this).text() == $("#showaction").text()) {
         $("title").html("工作平台 - " + $(this).text());

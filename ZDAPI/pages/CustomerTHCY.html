@@ -125,9 +125,10 @@
             if (jgdate < 1) {
                 alert("开始日期必须小于结束日期");
                 return;
-            }
-            //GetCustomer();
-            GetNum5(1, pageshownum, 0);
+            } 
+            stime = $("#startDate").val();
+            etime = $("#endDate").val();
+            GetNum5(1, pageshownum, 0, stime, etime);
         }); 
   
         jgdate = DateMinus(GetDateByMonth(GetNowDate(), 3), GetNowDate());

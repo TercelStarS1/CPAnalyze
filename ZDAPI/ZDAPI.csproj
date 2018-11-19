@@ -288,6 +288,7 @@
     <Content Include="FXresource\plugins\allhelper.js" />
     <Content Include="FXresource\plugins\jquery.cookie.js" />
     <Content Include="FXresource\plugins\pagefyhelper.js" />
+    <Content Include="pages\AreaLost.html" />
     <Content Include="pages\CustomerLostNew.html" />
     <Content Include="pages\CustomerLost.html" />
     <Content Include="pages\Customer002.html" />
@@ -295,6 +296,7 @@
     <Content Include="pages\SalesKF.html" />
     <Content Include="Global.asax" />
     <Content Include="login.html" />
+    <Content Include="pages\AreaNum.html" />
     <Content Include="pages\TemplateBodyBottom.html" />
     <Content Include="pages\TemplateBodyHead.html" />
     <Content Include="pages\TemplateHead.html" />

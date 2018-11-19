@@ -1,31 +1,29 @@
 ﻿<!DOCTYPE html>
-<html> 
+<html>
 <head>
-    <title>工作平台-开发能力总览</title>
-    <link rel="import" href="TemplateHead.html"  /> 
+    <title></title>
+    <link rel="import" href="TemplateHead.html">
 </head>
 
 <body class="hold-transition skin-blue sidebar-mini">
     <div class="wrapper">
         
+
         <div class="content-wrapper" id="contentdiv">
             <section class="content-header" style="border-bottom:2px solid grey;">
-                <h1  id="showaction">开发能力分析</h1>
+                <h1 id="showaction">地区客户暂停</h1>
                 <ol class="breadcrumb">
                     <li>
                         <a href="StarHome.html"><i class="fa fa-dashboard"></i> 主页</a>
                     </li>
                     <li class="active">业务员分析</li>
-
                 </ol>
             </section>
             <div class="pad margin no-print" style="padding-bottom:0px; margin-bottom:0px;">
                 <div class="row">
                     <div style="display:flex">
                         <div style="width:70px; margin-left:15px; margin-top:5px;">开始日期:</div>
-                        <input type="text" style="width:150px;" class="form-control input-small input-inline" id="startDate">
-                        <div style="width:70px; margin-left:15px; margin-top:5px;">结束日期:</div>
-                        <input type="text" style="width:150px;" class="form-control input-small input-inline" id="endDate">
+                        <input type="text" style="width:150px;" class="form-control input-small input-inline" id="startDate"> 
                         <select id="selectCompany" style="margin-left:15px; width:240px;" class="form-control selectpicker "></select>
                         <button id="btn_search" class="btn green" style="margin-left:20px;">
                             查询 <i class="fa fa-search"></i>
@@ -33,19 +31,28 @@
                     </div>
                 </div>
             </div>
-            <section class="content" >
+            <section class="content">
                 <div id="divshow" class="col-md-12">
 
                 </div>
                 <div class="col-md-12" style="width:95%;">
                     <ul id="fyshow" style="float:right;"></ul>
-                </div>  
+                </div>
             </section>
-        </div> 
+        </div>
+         
     </div> 
-     
-    <script type="text/javascript">   
+
+    <script type="text/javascript">
         
+        //获得日期
+        $(function () {
+            $("#startDate").datetimepicker({
+                format: 'YYYY-MM',
+                locale: moment.locale('zh-cn')
+            }); 
+            $("#startDate").val(GetDateYM(GetDateByMonth(GetNowDate(),10)));
+        });
         var xDate = new Array();  //时间跨度
         var numName1 = numName2 = numName3 = numName4 = numName5 = "";  //前五名编号
         var showName1 = showName2 = showName3 = showName4 = showName5 = "";  //前五名名字显示
@@ -54,40 +61,23 @@
         var skincompany = "";
         var stime;
         var etime;
+        
 
-        //获得日期
-        $(function () {
-            $("#startDate").datetimepicker({
-                format: 'YYYY-MM',
-                locale: moment.locale('zh-cn')
-            });
-            $("#endDate").datetimepicker({
-                format: 'YYYY-MM',
-                locale: moment.locale('zh-cn')
-            });
-            $("#endDate").val(GetDateYM(GetNowDate()));
-            $("#startDate").val(GetDateYM(GetDateByMonth(GetNowDate(), 8))); 
-        });
-         
-          
-        xDate = GetMonthArray(GetDateYM(GetDateByMonth(GetNowDate(), 8)), GetDateYM(GetNowDate()));
-        $("#selectCompany").html(localStorage.getItem('companyData')); 
+        xDate = GetMonthArray(GetDateYM(GetDateByMonth(GetNowDate(), 10)), GetNowDate());
+        $("#selectCompany").html(localStorage.getItem('companyData'));
         skincompany = $('#selectCompany option:selected').val();
-        stime = GetDateYM(GetDateByMonth(GetNowDate(), 8));
-        etime = GetDateYM(GetNowDate());
-        GetNum5(1, pageshownum, 0, stime, etime);
-
+        GetNum5(1, pageshownum, 0,GetDateYM(GetDateByMonth(GetNowDate(), 10)));
+          
         //点击查询
-        $("#btn_search").click(function () {  
-            stime = $("#startDate").val();
-            etime = $("#endDate").val();
-            xDate = GetMonthArray($("#startDate").val(), $("#endDate").val());
+        $("#btn_search").click(function () { 
+            xDate = GetMonthArray($("#startDate").val(), GetNowDate());  
             skincompany = $('#selectCompany option:selected').val();
-            GetNum5(1, pageshownum, 0, stime,etime);
+            stime = $("#startDate").val(); 
+            GetNum5(1, pageshownum, 0, stime);
         });
         //获取当前页展示客户编码列表
-        function GetNum5(n1, n2, n3, startDate, endDate) {   //当前页码，每页显示数量，当前显示页面 数据总量  
-            if (!xval) { 
+        function GetNum5(n1, n2, n3, startDate) {   //当前页码，每页显示数量，当前显示页面 数据总量
+            if (!xval) {
                 GetAjaxLoad("", "");
             }
             numName1 = numName2 = numName3 = numName4 = numName5 = "";  //前五名编号
@@ -96,44 +86,46 @@
             wgt5 = wgt4 = wgt3 = wgt2 = wgt1 = "";
             $.ajax({
                 type: "Post",
-                url: "/api/Sale/NewCoustomerByPage",
-                data: { startDate: startDate, endDate: endDate, COMPANY: $('#selectCompany option:selected').val(), PageNum: n1, ShowNum: n2 },
+                url: "/api/Sale/LostCoustomerByPageNew",
+                data: { startDate: startDate, COMPANY: $('#selectCompany option:selected').val(), PageNum: n1, ShowNum: n2 },
                 dataType: "json",
                 success: function (data) {
+                    console.log(data); 
                     n3 = data.num;
                     if (n3 == 0) {
                         if (xval) {
                             xval.remove();
                             xval = null;
-                        } 
+                        }
                         $("#divshow").html("<div class='text-center '> <h3>没有数据</h3> </div>");
                         return;
                     }
-                    var allpage = Math.ceil(n3 / pageshownum); 
-                    ShowPage("#fyshow", n1, allpage, shownowpage);   //ul ID 当前选中页码 总页数 回调函数 
+                    var allpage = Math.ceil(n3 / pageshownum);  
+                    ShowPage("#fyshow", n1, allpage, shownowpage);   //ul ID 当前选中页码 总页数 回调函数
                     data = data.data;
                     if (data.length == 5) {
                         numName1 = data[0].CODE; numName2 = data[1].CODE; numName3 = data[2].CODE; numName4 = data[3].CODE; numName5 = data[4].CODE;
-                        showName1 = data[0].NAME + " --开发新客户(个): " + data[0].Num; showName2 = data[1].NAME + " --开发新客户(个): " + data[1].Num; showName3 = data[2].NAME + " --开发新客户(个): " + data[2].Num; showName4 = data[3].NAME + " --开发新客户(个): " + data[3].Num; showName5 = data[4].NAME + " --开发新客户(个): " + data[4].Num;
+                        showName1 = data[0].NAME + " --暂停提货客户(个): " + data[0].Num; showName2 = data[1].NAME + " --暂停提货客户(个): " + data[1].Num; showName3 = data[2].NAME + " --暂停提货客户(个): " + data[2].Num; showName4 = data[3].NAME + " --暂停提货客户(个): " + data[3].Num; showName5 = data[4].NAME + " --暂停提货客户(个): " + data[4].Num;
                     }
                     else if (data.length == 4) {
-                        numName1 = data[0].CODE; numName2 = data[1].CODE; numName3 = data[2].CODE; numName4 = data[3].CODE; 
-                        showName1 = data[0].NAME + " --开发新客户(个): " + data[0].Num; showName2 = data[1].NAME + " --开发新客户(个): " + data[1].Num; showName3 = data[2].NAME + " --开发新客户(个): " + data[2].Num; showName4 = data[3].NAME + " --开发新客户(个): " + data[3].Num;
+                        numName1 = data[0].CODE; numName2 = data[1].CODE; numName3 = data[2].CODE; numName4 = data[3].CODE;
+                        showName1 = data[0].NAME + " --暂停提货客户(个): " + data[0].Num; showName2 = data[1].NAME + " --暂停提货客户(个): " + data[1].Num; showName3 = data[2].NAME + " --暂停提货客户(个): " + data[2].Num; showName4 = data[3].NAME + " --暂停提货客户(个): " + data[3].Num;
                     }
                     else if (data.length == 3) {
                         numName1 = data[0].CODE; numName2 = data[1].CODE; numName3 = data[2].CODE;
-                        showName1 = data[0].NAME + " --开发新客户(个): " + data[0].Num; showName2 = data[1].NAME + " --开发新客户(个): " + data[1].Num; showName3 = data[2].NAME + " --开发新客户(个): " + data[2].Num;
+                        showName1 = data[0].NAME + " --暂停提货客户(个): " + data[0].Num; showName2 = data[1].NAME + " --暂停提货客户(个): " + data[1].Num; showName3 = data[2].NAME + " --暂停提货客户(个): " + data[2].Num;
                     }
                     else if (data.length == 2) {
-                        numName1 = data[0].CODE; numName2 = data[1].CODE; 
-                        showName1 = data[0].NAME + " --开发新客户(个): " + data[0].Num; showName2 = data[1].NAME + " --开发新客户(个): " + data[1].Num;
+                        numName1 = data[0].CODE; numName2 = data[1].CODE;
+                        showName1 = data[0].NAME + " --暂停提货客户(个): " + data[0].Num; showName2 = data[1].NAME + " --暂停提货客户(个): " + data[1].Num;
                     }
                     else if (data.length == 1) {
                         numName1 = data[0].CODE;
-                        showName1 = data[0].NAME + " --开发新客户(个): " + data[0].Num;
+                        showName1 = data[0].NAME + " --暂停提货客户(个): " + data[0].Num;
                     }
                     GetTB();
-                },
+                }
+                ,
                 error: function () {
                     if (xval) {
                         xval.remove();
@@ -146,25 +138,22 @@
         function GetTB() {
             $.ajax({
                 type: "Post",
-                url: "/api/Sale/SalseDetailByPage",
+                url: "/api/Sale/SaleLostDetailByPageNew",
                 data: { startDate: $("#startDate").val(), endDate: $("#endDate").val(), COMPANY: $('#selectCompany option:selected').val() },
                 dataType: "json",
-                success: function (data) {
-                    console.log(data);
+                success: function (data) { 
                     var ynum = data.num;
-                    var data2 = data.data2;
                     data = data.data;
                     var num1 = new Array();
                     var num2 = new Array();
                     var num3 = new Array();
                     var num4 = new Array();
-                    var num5 = new Array(); 
-                    var skin = 0; //标示 
+                    var num5 = new Array();
+                    var skin = 0; //标示
                     var nnn = new Array();
-                    var name = "";
-                    console.log(numName1, numName2, numName3, numName4);
-                    for (var i = 0; i < data.length; i++) { 
-                        if (numName1 == data[i]["Salesperson"]) { 
+                    var name = ""; 
+                    for (var i = 0; i < data.length; i++) {
+                        if (numName1 == data[i]["Salesperson"]) {
                             skin++;
                             nnn.push(data[i]["WGT"]);
                             if (data[i]["NAME"]) {
@@ -176,8 +165,8 @@
                                     name: name,
                                     data: nnn
                                 };
-                                num1.push(abc); 
-                                nnn = new Array(); 
+                                num1.push(abc);
+                                nnn = new Array();
                             }
                         }
                         else if (numName2 == data[i]["Salesperson"]) {
@@ -246,21 +235,6 @@
                         }
                     }
                     $("#divshow").html("");
-                   
-                    for (var i = 0; i < data2.length; i++) {
-                        if (numName1 == data2[i]["Salesperson"])
-                            showName1  += "-" + data2[i]["Num"];
-                        if (numName2 == data2[i]["Salesperson"])
-                            showName2 += "-" + data2[i]["Num"];
-                        if (numName3 == data2[i]["Salesperson"])
-                            showName3 += "-" + data2[i]["Num"];
-                        if (numName4 == data2[i]["Salesperson"])
-                            showName4 += "-" + data2[i]["Num"];
-                        if (numName5 == data2[i]["Salesperson"])
-                            showName5 += "-" + data2[i]["Num"];
-                    }
-
-
                     if (numName1 != "")
                         ShowTB("container1", showName1, num1, ynum);
                     if (numName2 != "")
@@ -271,7 +245,8 @@
                         ShowTB("container4", showName4, num4, ynum);
                     if (numName5 != "")
                         ShowTB("container5", showName5, num5, ynum);
-                },
+                }
+                ,
                 error: function () {
                     if (xval) {
                         xval.remove();
@@ -282,19 +257,18 @@
         }
 
         //显示当前页内容
-        function shownowpage(page) {
-           
-            if (skincompany != $('#selectCompany option:selected').val() || stime != $("#startDate").val() || etime != $("#endDate").val()) {
+        function shownowpage(page) {  
+            if (skincompany != $('#selectCompany option:selected').val() || stime != $("#startDate").val()) {
                 page = 1;
-                jgdate = DateMinus($("#startDate").val(), $("#endDate").val());
-                stime = $("#startDate").val(); etime = $("#endDate").val();
-                GetNum5(page, pageshownum, numall, stime, etime);
+                stime = $("#startDate").val();
+                xDate = GetMonthArray($("#startDate").val(), GetNowDate());
+                GetNum5(page, pageshownum, numall, stime);
             }
             else {
-                GetNum5(page, pageshownum, numall, stime, etime);
+                GetNum5(page, pageshownum, numall, stime);
             }
         }
-       
+
         function ShowTB(id, showname, data, maxnum) { 
             $("#divshow").append('<div id="' + id + '" style="width:98%;height:220px"></div>');
             var chart = Highcharts.chart(id, {
@@ -310,19 +284,19 @@
                         color: 'block',
                         fontSize: '14px;'
                     }
-                }, 
+                },
                 xAxis: {
                     categories: xDate,
-                    crosshair: true,  
+                    crosshair: true,
                     tickLength:5,
                     labels: {
                         style: {
                             color: 'gray',
                             fontSize: '12px;'
-                        } 
-                    } 
+                        }
+                    }
                 },
-                yAxis: { 
+                yAxis: {
                     //max: maxnum,
                     gridLineWidth: "0",
                     title: {
@@ -334,8 +308,8 @@
                 },
                 tooltip: {
                     formatter: function () {
-                        return '<b>' + this.x + '</b><br/>' +
-                            this.series.name.split(":")[0] + ': ' + (this.point.y/1000).toFixed(2) + '<br/>';
+                        return '<b>' + this.x + ' 提货量</b><br/>' +
+                            this.series.name.split(":")[0] + ': ' + (this.point.y/1000).toFixed(2) + '(t)<br/>';
                     }
                 },
                 plotOptions: {
@@ -344,14 +318,14 @@
                     }
                 },
                 series: data
-            }); 
+            });
             if (xval)
             {
                 xval.remove();
                 xval = null;
-            } 
+            }
         }
 
-     </script>
+    </script>
 </body>
 </html>

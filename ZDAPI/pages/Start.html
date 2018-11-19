@@ -19,13 +19,34 @@
                 </ol>
             </section>
             <div class="pad margin no-print" style="padding-bottom:0px; margin-bottom:0px;">
-                
+                <div class="row" style="padding-left:10px;">
+                    <div style="display:flex">
+                        <select style="margin-left:15px; width:180px;" id="selectDate" class="form-control selectpicker ">
+                            <option value ="3">三个月</option>
+                            <option value ="6">六个月</option>
+                            <option value ="9">九个月</option>
+                            <option value ="1">一年</option>
+                        </select>
+                        <button id="btn_search" class="btn green" style="margin-left:20px;">
+                            查询 <i class="fa fa-search"></i>
+                        </button> 
+                    </div>
+                </div>
             </div>
-            <section class="content" style="display:flex;"> 
-                <div  class="col-md-12" style="display:flex;">
-                    <div id="divshow1"  class="col-md-6" style="height:550px;"></div>
-                    <div id="divshow2"  class="col-md-6" style="height:550px;"></div> 
+            <section class="content" > 
+                <div class="row">
+                    <div class="text-center col-md-12"  style="background-color:white; padding-top:6px;padding-bottom:6px;">
+                        <h4 id="titleh"></h4> 
+                        <p id="titlep"> </p>
+                    </div>
                 </div>  
+                <div class="divider"> </div>
+                <div style="display:flex;">
+                    <div class="col-md-6" style="height:600px" id="divshow1">
+                    </div>
+                    <div class="col-md-6" id="divshow2" style="height:600px">
+                    </div>
+                </div>
             </section>
         </div> 
     </div>    
@@ -34,56 +55,54 @@
         if (!xval) {
             GetAjaxLoad("", "");
         } 
+        $("#btn_search").click(function () {
+            if (!xval) {
+                GetAjaxLoad("", "");
+            }
+            GetData($('#selectDate option:selected').val()); 
+        });
+        GetData(3);
         //获取公司列表
-        $.ajax({
-            type: "Post",
-            url: "/api/Sale/CustomerNewAll",
-            dataType: 'json',
-            data: { Num: -90 },
-            success: function (data) { 
-                var num = data.num;
-                var soursedate = new Array();  //时间跨度
-                data = data.data; 
-                for (var i = 0; i < data.length; i++) {
-                    var abc = {
-                        name: data[i]["NAME"] +" 开发新客户（个）", 
-                        code: data[i]["COMPANY"],
-                        y: data[i]["Num"] 
-                    };
-                    soursedate.push(abc);
-                    ShowTB('divshow1', soursedate, "近3个月开发新客户总量图", num);
+        function GetData(num)
+        {
+            $.ajax({
+                type: "Post",
+                url: "/api/Sale/CustomerNewAll",
+                dataType: 'json',
+                data: { Num: num },
+                success: function (data) {
+                    var num = data.num;
+                    var soursedate = new Array();  //时间跨度
+                    var sourseZdate = new Array();  //时间跨度
+                    data = data.data;
+                    for (var i = 0; i < data.length; i++) {
+                        var a1 = {
+                            name: data[i]["NAME"],
+                            code: data[i]["COMPANY"],
+                            y: data[i]["Num"]
+                        };
+                        var a2 = [data[i]["NAME"], data[i]["Num"]];
+                        soursedate.push(a1);
+                        sourseZdate.push(a2);
+                    }
+                    if ($('#selectDate option:selected').val() == "1") {
+                        $("#titleh").html("近一年开发新客户总量");
+                    }
+                    else {
+                        $("#titleh").html("近" + $('#selectDate option:selected').val() + "个月开发新客户总量");
+                    }
+
+                    $("#titlep").html("开发新客户总数(个)：" + num);
+                    ShowTB('divshow1', soursedate, "", num);
+                    ShowZ(sourseZdate);
+                    if (xval) {
+                        xval.remove();
+                        xval = null;
+                    }
                 }
-                if (xval) {
-                    xval.remove();
-                    xval = null;
-                }
-            }
-        });
-        $.ajax({
-            type: "Post",
-            url: "/api/Sale/CustomerNewAll",
-            dataType: 'json',
-            data: { Num: -180 },
-            success: function (data) {
-                var soursedate = new Array();  //时间跨度
-                var num = data.num;
-                data = data.data;
-                for (var i = 0; i < data.length; i++) {
-                    var abc = {
-                        name: data[i]["NAME"] + " 开发新客户（个）",
-                        code: data[i]["COMPANY"],
-                        y: data[i]["Num"]
-                    };
-                    soursedate.push(abc); 
-                    ShowTB('divshow2', soursedate, "近6个月开发新客户总量图", num);
-                }
-                if (xval) {
-                    xval.remove();
-                    xval = null;
-                }
-            }
-        });
-        function ShowTB(id, data, name, num) {  
+            });
+        }
+        function ShowTB(id, data, name, num) { 
             Highcharts.chart(id, {
                 chart: {
                     plotBackgroundColor: null,
@@ -92,13 +111,16 @@
                     type: 'pie'
                 },
                 title: {
-                    text: name
+                    text: name,
+                    style: {
+                        display: 'none'
+                    }
                 }, 
-                subtitle: {
-                    text: '开发新客户总数(个)：' + num
-                },
+                //subtitle: {
+                //    text: '' + num
+                //},
                 exporting: {
-                    enabled: false //用来设置是否显示‘打印’,'导出'等功能按钮，不设置时默认为显示
+                    enabled: false  
                 },
                 tooltip: {
                     pointFormat: '{series.name}: <b>{point.y}</b>'
@@ -125,7 +147,56 @@
                     data: data
                 }]
             }); 
-        } 
+        }
+
+        function ShowZ(data) {
+            var chart = Highcharts.chart('divshow2', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    style: {
+                        display: 'none'
+                    }
+                },
+                exporting: {
+                    enabled: false
+                },
+                xAxis: {
+                    type: 'category',
+                    labels: {
+                        rotation: -45,  // 设置轴标签旋转角度
+                        formatter: function () {
+                            return this.value.substring(0, 4);
+                        }
+                    } 
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: '新增数量'
+                    }
+                },
+                legend: {
+                    enabled: false
+                },
+                tooltip: {
+                    pointFormat: '<b>{point.y}</b>'
+                },
+                series: [{
+                    name: '总人口',
+                    data: data,
+                    dataLabels: {
+                        enabled: true,
+                        rotation: -90,
+                        color: '#FFFFFF',
+                        align: 'right',
+                        format: '{point.y }', // :.1f 为保留 1 位小数
+                        y: 10
+                    }
+                }]
+            });
+        }
      </script>
 </body>
 </html>
