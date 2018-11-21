@@ -66,14 +66,14 @@
                 locale: moment.locale('zh-cn')
             });
             $("#endDate").val(GetDateYM(GetNowDate()));
-            $("#startDate").val(GetDateYM(GetDateByMonth(GetNowDate(), 8))); 
+            $("#startDate").val(GetDateYM(GetDateByMonth(GetNowDate(), 10)));
         });
          
           
-        xDate = GetMonthArray(GetDateYM(GetDateByMonth(GetNowDate(), 8)), GetDateYM(GetNowDate()));
+        xDate = GetMonthArray(GetDateYM(GetDateByMonth(GetNowDate(), 10)), GetDateYM(GetNowDate()));
         $("#selectCompany").html(localStorage.getItem('companyData')); 
         skincompany = $('#selectCompany option:selected').val();
-        stime = GetDateYM(GetDateByMonth(GetNowDate(), 8));
+        stime = GetDateYM(GetDateByMonth(GetNowDate(), 10));
         etime = GetDateYM(GetNowDate());
         GetNum5(1, pageshownum, 0, stime, etime);
 
@@ -114,23 +114,23 @@
                     data = data.data;
                     if (data.length == 5) {
                         numName1 = data[0].CODE; numName2 = data[1].CODE; numName3 = data[2].CODE; numName4 = data[3].CODE; numName5 = data[4].CODE;
-                        showName1 = data[0].NAME + " --开发新客户(个): " + data[0].Num; showName2 = data[1].NAME + " --开发新客户(个): " + data[1].Num; showName3 = data[2].NAME + " --开发新客户(个): " + data[2].Num; showName4 = data[3].NAME + " --开发新客户(个): " + data[3].Num; showName5 = data[4].NAME + " --开发新客户(个): " + data[4].Num;
+                        showName1 = data[0].NAME + " --新增客户(个): " + data[0].Num; showName2 = data[1].NAME + " --新增客户(个): " + data[1].Num; showName3 = data[2].NAME + " --新增客户(个): " + data[2].Num; showName4 = data[3].NAME + " --新增客户(个): " + data[3].Num; showName5 = data[4].NAME + " --新增客户(个): " + data[4].Num;
                     }
                     else if (data.length == 4) {
                         numName1 = data[0].CODE; numName2 = data[1].CODE; numName3 = data[2].CODE; numName4 = data[3].CODE; 
-                        showName1 = data[0].NAME + " --开发新客户(个): " + data[0].Num; showName2 = data[1].NAME + " --开发新客户(个): " + data[1].Num; showName3 = data[2].NAME + " --开发新客户(个): " + data[2].Num; showName4 = data[3].NAME + " --开发新客户(个): " + data[3].Num;
+                        showName1 = data[0].NAME + " --新增客户(个): " + data[0].Num; showName2 = data[1].NAME + " --新增客户(个): " + data[1].Num; showName3 = data[2].NAME + " --新增客户(个): " + data[2].Num; showName4 = data[3].NAME + " --新增客户(个): " + data[3].Num;
                     }
                     else if (data.length == 3) {
                         numName1 = data[0].CODE; numName2 = data[1].CODE; numName3 = data[2].CODE;
-                        showName1 = data[0].NAME + " --开发新客户(个): " + data[0].Num; showName2 = data[1].NAME + " --开发新客户(个): " + data[1].Num; showName3 = data[2].NAME + " --开发新客户(个): " + data[2].Num;
+                        showName1 = data[0].NAME + " --新增客户(个): " + data[0].Num; showName2 = data[1].NAME + " --新增客户(个): " + data[1].Num; showName3 = data[2].NAME + " --新增客户(个): " + data[2].Num;
                     }
                     else if (data.length == 2) {
                         numName1 = data[0].CODE; numName2 = data[1].CODE; 
-                        showName1 = data[0].NAME + " --开发新客户(个): " + data[0].Num; showName2 = data[1].NAME + " --开发新客户(个): " + data[1].Num;
+                        showName1 = data[0].NAME + " --新增客户(个): " + data[0].Num; showName2 = data[1].NAME + " --新增客户(个): " + data[1].Num;
                     }
                     else if (data.length == 1) {
                         numName1 = data[0].CODE;
-                        showName1 = data[0].NAME + " --开发新客户(个): " + data[0].Num;
+                        showName1 = data[0].NAME + " --新增客户(个): " + data[0].Num;
                     }
                     GetTB();
                 },

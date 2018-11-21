@@ -45,7 +45,7 @@ namespace WebAPI.Controllers
                 string userName = info.CODE.Trim();
                 if (userName =="admin")
                 {
-                    var query = db.ZB_FEED_COMPANY.AsQuery().ToList() ;
+                    var query = db.ZB_FEED_COMPANY.AsQuery().OrderBy(w => w.CODE).ToList() ;
                     //return Succeed("返回可以访问的路径", "返回所有的可以看得公司列表", "超级管理员","0"); 
                     return Succeed(query, query,0, "超级管理员", "0");
                 }

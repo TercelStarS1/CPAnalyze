@@ -102,23 +102,23 @@
                     data = data.data;
                     if (data.length == 5) {
                         numName1 = data[0].CODE; numName2 = data[1].CODE; numName3 = data[2].CODE; numName4 = data[3].CODE; numName5 = data[4].CODE;
-                        showName1 = data[0].NAME + " --暂停提货客户(个): " + data[0].Num; showName2 = data[1].NAME + " --暂停提货客户(个): " + data[1].Num; showName3 = data[2].NAME + " --暂停提货客户(个): " + data[2].Num; showName4 = data[3].NAME + " --暂停提货客户(个): " + data[3].Num; showName5 = data[4].NAME + " --暂停提货客户(个): " + data[4].Num;
+                        showName1 = data[0].NAME + " --流失客户(个): " + data[0].Num; showName2 = data[1].NAME + " --流失客户(个): " + data[1].Num; showName3 = data[2].NAME + " --流失客户(个): " + data[2].Num; showName4 = data[3].NAME + " --流失客户(个): " + data[3].Num; showName5 = data[4].NAME + " --流失客户(个): " + data[4].Num;
                     }
                     else if (data.length == 4) {
                         numName1 = data[0].CODE; numName2 = data[1].CODE; numName3 = data[2].CODE; numName4 = data[3].CODE;
-                        showName1 = data[0].NAME + " --暂停提货客户(个): " + data[0].Num; showName2 = data[1].NAME + " --暂停提货客户(个): " + data[1].Num; showName3 = data[2].NAME + " --暂停提货客户(个): " + data[2].Num; showName4 = data[3].NAME + " --暂停提货客户(个): " + data[3].Num;
+                        showName1 = data[0].NAME + " --流失客户(个): " + data[0].Num; showName2 = data[1].NAME + " --流失客户(个): " + data[1].Num; showName3 = data[2].NAME + " --流失客户(个): " + data[2].Num; showName4 = data[3].NAME + " --流失客户(个): " + data[3].Num;
                     }
                     else if (data.length == 3) {
                         numName1 = data[0].CODE; numName2 = data[1].CODE; numName3 = data[2].CODE;
-                        showName1 = data[0].NAME + " --暂停提货客户(个): " + data[0].Num; showName2 = data[1].NAME + " --暂停提货客户(个): " + data[1].Num; showName3 = data[2].NAME + " --暂停提货客户(个): " + data[2].Num;
+                        showName1 = data[0].NAME + " --流失客户(个): " + data[0].Num; showName2 = data[1].NAME + " --流失客户(个): " + data[1].Num; showName3 = data[2].NAME + " --流失客户(个): " + data[2].Num;
                     }
                     else if (data.length == 2) {
                         numName1 = data[0].CODE; numName2 = data[1].CODE;
-                        showName1 = data[0].NAME + " --暂停提货客户(个): " + data[0].Num; showName2 = data[1].NAME + " --暂停提货客户(个): " + data[1].Num;
+                        showName1 = data[0].NAME + " --流失客户(个): " + data[0].Num; showName2 = data[1].NAME + " --流失客户(个): " + data[1].Num;
                     }
                     else if (data.length == 1) {
                         numName1 = data[0].CODE;
-                        showName1 = data[0].NAME + " --暂停提货客户(个): " + data[0].Num;
+                        showName1 = data[0].NAME + " --流失客户(个): " + data[0].Num;
                     }
                     GetTB();
                 },
