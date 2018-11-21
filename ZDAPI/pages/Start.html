@@ -9,12 +9,12 @@
     <div class="wrapper">  
         <div class="content-wrapper" id="contentdiv">
             <section class="content-header" style="border-bottom:2px solid grey;">
-                <h1 id="showaction">开发能力总览</h1>
+                <h1 id="showaction">新增客户一览</h1>
                 <ol class="breadcrumb">
                     <li>
                         <a href="StarHome.html"><i class="fa fa-dashboard"></i> 主页</a>
                     </li>
-                    <li class="active">业务员分析</li>
+                    <li class="active">业务员/地区/客户分析</li>
 
                 </ol>
             </section>
@@ -72,8 +72,9 @@
                 data: { Num: num },
                 success: function (data) {
                     var num = data.num;
-                    var soursedate = new Array();  //时间跨度
-                    var sourseZdate = new Array();  //时间跨度
+                    var lastNum = data.skin; 
+                    var soursedate = new Array();   
+                    var sourseZdate = new Array();  
                     data = data.data;
                     for (var i = 0; i < data.length; i++) {
                         var a1 = {
@@ -92,15 +93,24 @@
                         $("#titleh").html("近" + $('#selectDate option:selected').val() + "个月开发新客户总量");
                     }
 
-                    $("#titlep").html("开发新客户总数(个)：" + num);
-                    ShowTB('divshow1', soursedate, "", num);
-                    ShowZ(sourseZdate);
+                    $("#titlep").html("开发新客户总数(个)：" + num + "-" + lastNum);
+                    var aaaaaaa = soursedate.sort(descend);  //数组排序
+                    ShowTB('divshow1', sourseZdate, "", num);
+                    ShowZ(aaaaaaa);
                     if (xval) {
                         xval.remove();
                         xval = null;
                     }
                 }
             });
+        }
+              
+        function descend(x, y) {
+            var t1 = x.y * 1;
+            var t2 = y.y * 1;
+            if (t1 > t2) return -1;
+            else if (t1 < t2) return 1;
+            else return 0; 
         }
         function ShowTB(id, data, name, num) { 
             Highcharts.chart(id, {
@@ -191,7 +201,7 @@
                         rotation: -90,
                         color: '#FFFFFF',
                         align: 'right',
-                        format: '{point.y }', // :.1f 为保留 1 位小数
+                        format: '{point.y}', 
                         y: 10
                     }
                 }]

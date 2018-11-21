@@ -14,7 +14,7 @@ if (!$.cookie('loginUser'))
 }
 $(".sidebar li a").each(function (index) {
     if ($(this).text() == $("#showaction").text()) {
-        $("title").html("工作平台 - " + $(this).text());
+        $("title").html("饲料销量分析 - " + $(this).text());
         $(this).parent().attr("class", "active");
         $(this).parents("li").addClass("active");
         return;

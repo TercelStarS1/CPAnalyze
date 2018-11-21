@@ -45,15 +45,20 @@ namespace WebAPI.Controllers
                 else {
                     startDate = DateTime.Now.AddDays(-30 * numjg).ToShortDateString();
                 }
-                 
+                string beginDate = DateTime.Now.AddDays(-60).ToShortDateString(); 
                 
                 var sqlNum = "select COMPANY,name,Num from( select count(customer) num , company from  (select * from(select customer, company,min(doc_date) doc_date from zb_feed_sale " +
                     " where customer not like '9%' group by customer, company ) "+
                     " ) where doc_date > to_date('" + startDate + "', 'YYYY/MM/DD')  group by company ) t1 join ZB_FEED_COMPANY t2 on(t1.company = t2.code)";
 
+                var lastNum = "select count(t1.customer) from (select * from( select customer, company,min(doc_date) doc_date from zb_feed_sale  where customer not like '9%' group by customer, company "+
+                    " ) where doc_date > to_date('"+startDate+"', 'YYYY/MM/DD')"+
+                    " )t1 join (select customer, company from(select customer, company, max(doc_date)doc_date from zb_feed_sale  where customer not like '9%' group by customer, company"+
+                    " ) where doc_date > to_date('"+ beginDate + "', 'YYYY/MM/DD')  ) t2 on(t1.customer = t2.customer and t1.company = t2.company)";
                 var query = db.ExecuteSqlToList<ZB_FEED_CUSTOMER>(sqlNum).ToList();
-                int num = query.Sum(g => g.Num); 
-                return Succeed(query, num, "");
+                int num = query.Sum(g => g.Num);
+                string allnum = db.ExecuteScalar(lastNum).ToString();
+                return Succeed(query, num, allnum);
             }
         } 
 
@@ -229,10 +234,10 @@ namespace WebAPI.Controllers
                 int startNUM = info.PageNum * info.ShowNum - info.ShowNum;
                 int endNUM = startNUM + info.ShowNum;
 
-                var sqlNum = "select num,code,name, rownum rn from (select salesarea, count(salesarea) num from(select *  from(select t3.*,row_number() over(partition by  customer,company order by eff_date desc) cn from  (select t1.customer,t1.company,t1.doc_date,t2.eff_date,substr(t2.salesarea,0,9) salesarea from " +
+                var sqlNum = "select num,code,name , rownum rn  from  (select num,code,name from (select salesarea, count(salesarea) num from(select *  from(select t3.*,row_number() over(partition by  customer,company order by eff_date desc) cn from  (select t1.customer,t1.company,t1.doc_date,t2.eff_date,substr(t2.salesarea,0,9) salesarea from " +
                     " (select * from(select * from(select customer, company, min(doc_date) doc_date from zb_feed_sale   where company = '"+ company + "' and customer not like '9%'  group by customer, company) "+
                     " ) where doc_date >= to_date('"+ startDate + "', 'YYYY/MM/DD')  and  doc_date < to_date('"+ endDate + "', 'YYYY/MM/DD') "+
-                    ") t1 join (select * from zb_feed_salesa_cust where company = '"+ company + "') t2 on(t1.company = t2.company and t1.customer = t2.customer and t2.eff_date <= t1.doc_date)) t3  ) where cn = 1) t4 group by salesarea  ) t5 join zb_feedv_salesarea t6 on(t5.salesarea = substr(t6.code, 0, 9)) order by num desc ";
+                    ") t1 join (select * from zb_feed_salesa_cust where company = '"+ company + "') t2 on(t1.company = t2.company and t1.customer = t2.customer and t2.eff_date <= t1.doc_date)) t3  ) where cn = 1) t4 group by salesarea  ) t5 join zb_feedv_salesarea t6 on(t5.salesarea = substr(t6.code, 0, 9)) order by num desc )";
                  
                 var query = db.ExecuteSqlToList<ZB_FEED_CUSTOMER>(sqlNum);
                 int num = query.Count();
@@ -344,6 +349,142 @@ namespace WebAPI.Controllers
             }
         }
 
+
+        /// <summary>
+        /// 根据分页返回当前页面 地区新客户信息
+        /// </summary>
+        /// <param name="info"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public IHttpActionResult LostCoustomerByArea(ZB_FEED_CUSTOMER info)   //当前页码，显示条数
+        {
+            using (StarOracle db = new StarOracle())
+            {
+                string company = info.COMPANY; //公司ID
+                string startDate = DateTime.Now.AddDays(-60).ToShortDateString();
+                string beginDate = info.startDate.ToShortDateString();  
+
+                //根据页数展示显示数据
+                int startNUM = info.PageNum * info.ShowNum - info.ShowNum;
+                int endNUM = startNUM + info.ShowNum;
+
+                var sqlNum = "select num,code,name , rownum rn  from (select num,code,name from (select salesarea, count(salesarea) num from( select *  from(select t3.*,row_number() over(partition by  customer,company order by eff_date desc) cn from  " +
+                            " (select t1.customer, t1.company, t1.doc_date, t2.eff_date, substr(t2.salesarea, 0, 9) salesarea from(select * from(select customer, company, max(doc_date) doc_date from zb_feed_sale" +
+                            " where company = '"+ company + "' and doc_date >= to_date('" + beginDate + "', 'YYYY/MM/DD') and customer not like '9%'  group by customer, company" +
+                            " ) where  doc_date < to_date('"+ startDate + "', 'yyyy-mm-dd')" +
+                            " ) t1 join(select * from zb_feed_salesa_cust where company = '" + company + "') t2 on(t1.company = t2.company and t1.customer = t2.customer and t2.eff_date <= t1.doc_date)) t3  ) where cn = 1) t4 group by salesarea  ) t5 join zb_feedv_salesarea t6 on(t5.salesarea = substr(t6.code, 0, 9)) order by num desc  )";
+
+                var query = db.ExecuteSqlToList<ZB_FEED_CUSTOMER>(sqlNum);
+                int num = query.Count();
+
+                query = query.Where(s => s.RN > startNUM & s.RN <= endNUM);
+
+                List<ZB_FEED_CUSTOMER> result = query.ToList();
+                areaNumLost = "";
+                foreach (var ZB_FEED_CUSTOMER in result)
+                {
+                    areaNumLost += "'" + ZB_FEED_CUSTOMER.CODE + "',";
+                }
+                areaNumLost = (areaNumLost.Length > 1) ? areaNumLost.Substring(0, areaNumLost.Length - 1) : "";
+                return Succeed(result, num, "");
+            }
+        }
+
+        /// <summary>
+        /// 获取某公司前五名销售统计
+        /// </summary>
+        /// <param name="info"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public IHttpActionResult LostAreaDetailByPage(ZB_FEED_CUSTOMER info)
+        {
+            using (StarOracle db = new StarOracle())
+            {
+
+                string company = info.COMPANY; //公司ID 
+                string startDate = DateTime.Now.AddDays(-60).ToShortDateString();
+                string beginDate = info.startDate.ToShortDateString();  //
+
+                var sqlNum = "select * from (   select t5.customer,monthall,wgt,t5.name,t6.code from(select customer,monthall,wgt,name from (SELECT customer, TO_CHAR(doc_date,'YYYY-MM') monthall,sum(wgt) wgt   from (select t1.* from zb_feed_sale t1 join (select * from (select customer, company,max(doc_date) doc_date from zb_feed_sale"+
+                        " where company = '" + company + "' and doc_date >= to_date('" + beginDate + "', 'YYYY/MM/DD') and customer not like '9%'  group by customer, company" +
+                        " ) where doc_date< to_date('"+ startDate + "', 'yyyy-mm-dd')   ) t2 on t1.customer = t2.customer and t1.company = t2.company" +
+                        " where t1.doc_date >= to_date('" + beginDate + "', 'YYYY/MM/DD')  )" +
+                        " group by TO_CHAR(doc_date, 'YYYY-MM') ,customer) t3 join zb_feed_customer t4 on(t3.customer = t4.code and t4.company = '" + company + "')) t5 join(select customer, code, name from (select * from(select t3.*, row_number() over(partition by  customer, company order by eff_date desc) cn from" +
+                        "   (select t1.customer, t1.company, t1.doc_date, t2.eff_date, substr(t2.salesarea, 0, 9) salesarea from(select * from(select customer, company, max(doc_date) doc_date from zb_feed_sale" +
+                        "   where company = '" + company + "' and doc_date >= to_date('" + beginDate + "', 'YYYY/MM/DD') and customer not like '9%'  group by customer, company" +
+                        "   ) where  doc_date < to_date('" + startDate + "', 'yyyy-mm-dd')" +
+                        "   ) t1 join(select * from zb_feed_salesa_cust where company = '" + company + "') t2 on(t1.company = t2.company and t1.customer = t2.customer and t2.eff_date <= t1.doc_date)) t3) where cn = 1) t5 join zb_feedv_salesarea t6 on(t5.salesarea = substr(t6.code, 0, 9)))t6 on (t5.customer = t6.customer)) where code in (" + areaNumLost + ")";
+
+                List<ZB_FEED_CUSTOMER> query = db.ExecuteSqlToList<ZB_FEED_CUSTOMER>(sqlNum).ToList();
+
+                List<ZB_FEED_CUSTOMER> num = query.GroupBy(r => r.Customer).Select(r => r.First()).ToList();  //統計新客户个数
+
+                var aaa = query.GroupBy(r => r.Customer).Select(g => (new { Customer = g.Key, Num = g.Sum(a => a.WGT) })).ToList();
+
+                //var bbbb = query.Where(s => s.monthall == info.endDate.ToString("yyyy-MM") || s.monthall == info.endDate.AddMonths(-1).ToString("yyyy-MM")).Select(r => new { CODE = r.CODE, Customer = r.Customer }).Distinct().ToList();
+
+                //var ccc = bbbb.GroupBy(g => g.CODE).Select(g => (new { Customer = g.Key, Num = g.Count() })).ToList();
+
+                  
+
+
+                List<ZB_FEED_CUSTOMER> data2 = new List<ZB_FEED_CUSTOMER>();
+                //for (int i = 0; i < ccc.Count; i++)
+                //{
+                //    ZB_FEED_CUSTOMER c1 = new ZB_FEED_CUSTOMER();
+                //    c1.Salesperson = ccc[i].Customer;
+                //    c1.Num = ccc[i].Num;
+                //    data2.Add(c1);
+                //}
+                for (int i = 0; i < num.Count; i++)
+                {
+                    for (int j = 0; j < aaa.Count; j++)
+                    {
+                        if (num[i].Customer == aaa[j].Customer)
+                        {
+                            num[i].Num = (int)aaa[j].Num;
+                            break;
+                        }
+                    }
+                }
+
+                List<ZB_FEED_CUSTOMER> result = new List<ZB_FEED_CUSTOMER>();
+
+                for (int i = 0; i < num.Count; i++)
+                {
+                    for (System.DateTime j = info.startDate; j <= DateTime.Now; j = j.AddMonths(1))
+                    {
+                        ZB_FEED_CUSTOMER zbinfo = new ZB_FEED_CUSTOMER();
+                        zbinfo.CODE = num[i].CODE;  //客户编号
+                        zbinfo.Customer = num[i].Customer;  //客户编号
+                        zbinfo.Salesperson = num[i].Salesperson;
+                        zbinfo.Num = num[i].Num;
+                        zbinfo.monthall = j.ToString("yyyy-MM");  //销售月份
+                        zbinfo.WGT = 0;
+
+                        result.Add(zbinfo);
+                    }
+                }
+                for (int i = 0; i < result.Count; i++)
+                {
+                    for (int j = 0; j < query.Count; j++)
+                    {
+                        if (result[i].Customer == query[j].Customer && result[i].monthall == query[j].monthall)
+                        {
+                            result[i].WGT = query[j].WGT;  //该月销售重量 
+                            result[i].NAME = query[j].NAME;  //客户姓名
+                            result[i].Customer = query[j].Customer;  //客户姓名
+                            result[i].CODE = query[j].CODE;  //客户姓名
+                            break;
+                        }
+                    }
+                }
+
+                int wgt = (int)query.OrderByDescending(m => m.WGT).First().WGT;
+                return Succeed(result, data2, wgt, "");
+
+            }
+        }
 
 
 

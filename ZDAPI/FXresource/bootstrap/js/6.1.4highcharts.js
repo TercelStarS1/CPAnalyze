@@ -2222,8 +2222,8 @@ function(T) {
         var C = a.color,
         E = a.merge;
         a.defaultOptions = {
-            //colors: "#7cb5ec #434348 #90ed7d #f7a35c #8085e9 #f15c80 #e4d354 #2b908f #f45b5b #91e8e1".split(" "),
-            colors: "#7cb5ec #90ed7d #f7a35c #8085e9 #f15c80 #e4d354 #2b908f #f45b5b #91e8e1".split(" "),
+            //colors: "#7cb5ec #434348 #90ed7d #f7a35c #8085e9 #f15c80 #e4d354 #2b908f #f45b5b #91e8e1".split(" "),  "#E9967A","#A2CD5A","#8B3E2F","","","","","","","","","","",""
+            colors: "#7cb5ec #90ed7d #f7a35c #8085e9 #e4d354 #2b908f #f45b5b #228fbd #375830 #91e8e1 #c23531 #2f4554 #61a0a8 #00ae9d #de773f #749f83 #f15c80 #d1c7b7 #007d65 #bda29a #6e7074 #546570 #769149 #c37e00".split(" "),
             symbols: ["circle", "diamond", "square", "triangle", "triangle-down"],
             lang: {
                 loading: "Loading...",
