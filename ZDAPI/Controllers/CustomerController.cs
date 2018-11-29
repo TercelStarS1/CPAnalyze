@@ -249,7 +249,7 @@ namespace WebAPI.Controllers
                 string endDate = info.endDate.ToShortDateString();
 
                 var sqlNum = "select zf.customer customer,zf.doc_date doc_date, zf.company company,sum(zf.wgt) wgt,zc.name CUSTOMERName from zb_feed_sale zf  join zb_feed_customer zc on(zf.customer = zc.code and zf.company=zc.company )" +
-                   "where zf.customer in(" + num5customer + ") and zf.doc_date between to_date('" + startDate + "', 'yyyy-mm-dd') and to_date('" + endDate + "', 'yyyy-mm-dd') " +
+                   "where zf.customer in(" + num5customer + ")  AND ZC.COMPANY ='"+company+"' and zf.doc_date between to_date('" + startDate + "', 'yyyy-mm-dd') and to_date('" + endDate + "', 'yyyy-mm-dd') " +
                    "group by  zf.customer,zf.doc_date  ,zf.company,zc.name order by zf.doc_date "; 
 
                 List<ZB_FEED_SALE> query = db.ExecuteSqlToList<ZB_FEED_SALE>(sqlNum).ToList();
@@ -304,7 +304,7 @@ namespace WebAPI.Controllers
                 string endDate = info.endDate.ToShortDateString();
 
                 var sqlNum = "select zf.customer customer,zf.doc_date doc_date, zf.company company,sum(zf.wgt) wgt,zc.name CUSTOMERName from zb_feed_sale zf  join zb_feed_customer zc on(zf.customer = zc.code and zf.company=zc.company )" +
-                   "where zf.customer in(" + num5customercy + ") and zf.doc_date between to_date('" + startDate + "', 'yyyy-mm-dd') and to_date('" + endDate + "', 'yyyy-mm-dd') " +
+                   "where zf.customer in(" + num5customercy + ") and Zf.COMPANY ='" + company + "' and  zf.doc_date between to_date('" + startDate + "', 'yyyy-mm-dd') and to_date('" + endDate + "', 'yyyy-mm-dd') " +
                    "group by  zf.customer,zf.doc_date  ,zf.company,zc.name order by zf.doc_date ";
 
 

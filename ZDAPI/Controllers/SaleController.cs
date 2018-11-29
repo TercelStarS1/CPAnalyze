@@ -144,7 +144,7 @@ namespace WebAPI.Controllers
                             " ) t5 join(select customer, salesperson, name from (select * from(select t3.*, row_number() over(partition by  customer, company order by eff_date desc) cn from(select t1.customer, t1.company, t1.doc_date, t2.eff_date, salesperson from(select * from(" +
                             " select * from(select customer, company, min(doc_date) doc_date from zb_feed_sale   where company = '" + company + "' and customer not like '9%'  group by customer, company)" +
                             " ) where doc_date >= to_date('" + startDate + "', 'YYYY/MM')  and  doc_date < to_date('" + endDate + "', 'YYYY/MM')" +
-                            " ) t1 join(select * from zb_feed_salesp_cust where company = '" + company + "') t2 on(t1.company = t2.company and t1.customer = t2.customer and t2.eff_date <= t1.doc_date)) t3) where cn = 1 ) t5 join zb_feed_salesperson t6 on(t5.salesperson = t6.code))t6 on (t5.customer = t6.customer)order by customer, monthall" +
+                            " ) t1 join(select * from zb_feed_salesp_cust where company = '" + company + "') t2 on(t1.company = t2.company and t1.customer = t2.customer and t2.eff_date <= t1.doc_date)) t3) where cn = 1 ) t5 join zb_feed_salesperson t6 on(t5.salesperson = t6.code  and t5.company=t6.company))t6 on (t5.customer = t6.customer)order by customer, monthall" +
                             " )where salesperson in ("+ num5sales + ")";
                 List<ZB_FEED_CUSTOMER> query = db.ExecuteSqlToList<ZB_FEED_CUSTOMER>(sqlNum).ToList();
 
@@ -207,6 +207,7 @@ namespace WebAPI.Controllers
                 }
 
                 int wgt = (int)query.OrderByDescending(m => m.WGT).First().WGT;
+                result = result.OrderByDescending(m => m.Num).ToList();
                 return Succeed(result, data2, wgt, "");
                  
             }
@@ -344,8 +345,8 @@ namespace WebAPI.Controllers
                 }
 
                 int wgt = (int)query.OrderByDescending(m => m.WGT).First().WGT;
-                return Succeed(result, data2, wgt, "");
-
+                result = result.OrderByDescending(m => m.Num).ToList();
+                return Succeed(result, data2, wgt, ""); 
             }
         }
 
@@ -481,6 +482,7 @@ namespace WebAPI.Controllers
                 }
 
                 int wgt = (int)query.OrderByDescending(m => m.WGT).First().WGT;
+                result = result.OrderByDescending(m => m.Num).ToList();
                 return Succeed(result, data2, wgt, "");
 
             }
@@ -787,11 +789,10 @@ namespace WebAPI.Controllers
                 }
 
                 int wgt = (int)query.OrderByDescending(m => m.WGT).First().WGT;
-                return Succeed(result, wgt, "");
-
+                result = result.OrderByDescending(m => m.Num).ToList();
+                return Succeed(result, wgt, ""); 
             }
-        }
-
+        } 
         #endregion
 
 

@@ -1,0 +1,240 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>工作平台-首页</title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="../FXresource/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../FXresource/StarResource/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../FXresource/StarResource/css/ionicons.min.css">
+    <link rel="stylesheet" href="../FXresource/dist/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../FXresource/dist/css/skins/_all-skins.min.css">
+    <link rel="stylesheet" href="../FXresource/bootstrap/css/datetimepicker.min.css">
+
+    <!--[if lt IE 9]>
+    <script src="~/StarResource/js/html5shiv.min.js"></script>
+    <script src="~/StarResource/js/respond.min.js"></script>
+    <![endif]-->
+    <style>
+        canvas {
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+        }  
+        .chart-container {
+            width: 85%;
+            margin-left: 25px;
+        }
+
+        .container {
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+    </style>
+</head>
+
+<body class="hold-transition skin-blue sidebar-mini">
+    <div class="wrapper">
+        <header class="main-header">
+            <a href="StarHome.html" class="logo">
+                <span class="logo-mini"><b>S</b>tar</span>
+                <span class="logo-lg"><b>工作</b>平台</span>
+            </a>
+            <nav class="navbar navbar-static-top">
+                <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                    <span class="sr-only">Toggle navigation</span>
+                </a>
+                <div class="navbar-custom-menu">
+                    <ul class="nav navbar-nav">
+                        <li class="dropdown user user-menu">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <img src="../FXresource/dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
+                                <span class="hidden-xs">Star</span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li class="user-footer">
+                                    <div class="pull-left">
+                                        <a href="#" class="btn btn-default btn-flat">资料</a>
+                                    </div>
+                                    <div class="pull-right">
+                                        <a href="#" class="btn btn-default btn-flat">Sign out</a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <aside class="main-sidebar">
+            <section class="sidebar">
+                <ul class="sidebar-menu">
+                    <li class="active treeview">
+                        <a href="#">
+                            <i class="fa fa-dashboard"></i> <span>销售分析</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                           
+                            <li class="active">
+                                <a href="SalesKF.html"><i class="fa fa-circle-o"></i> 开发分析-柱状</a>
+                            </li><li>
+                                <a href="StarHome.html"><i class="fa fa-circle-o"></i> 开发分析</a>
+                            </li> 
+                        </ul>
+                    </li>
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-folder"></i> <span>客户分析</span>
+                            <span class="pull-right-container"> <i class="fa fa-angle-left pull-right"></i> </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li>
+                                <a href="CustomerTH.html"><i class="fa fa-circle-o"></i>提货量分析-柱状图</a>
+                            </li>
+                            <li>
+                                <a href="CustomerLost.html"><i class="fa fa-circle-o"></i>客户丢失分析</a>
+                            </li>
+                            <li>
+                                <a href="CustomerTHCY.html"><i class="fa fa-circle-o"></i>提货量差异分析</a>
+                            </li>
+                            <li>
+                                <a href="Customer002.html"><i class="fa fa-circle-o"></i>提货量</a>
+                            </li>
+                            <li>
+                                <a href="CustomerNum.html"><i class="fa fa-circle-o"></i>提货量分析-圆点图</a>
+                            </li>  
+                        </ul>
+                    </li>
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-folder"></i> <span>测试</span>
+                            <span class="pull-right-container"> <i class="fa fa-angle-left pull-right"></i> </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li>
+                                <a href="bdcc.html"><i class="fa fa-circle-o"></i>本地存储</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+        </aside>
+
+        <div class="content-wrapper">
+            <section class="content-header" style="border-bottom:2px solid grey;">
+                <h1>开发能力</h1>
+                <ol class="breadcrumb">
+                    <li>
+                        <a href="StarHome.html"><i class="fa fa-dashboard"></i> 主页</a>
+                    </li>
+                    <li class="active">开发分析</li>
+                </ol>
+            </section>
+            <div class="pad margin no-print" style="padding-bottom:0px; margin-bottom:0px;">
+                <div class="row">
+                    <div style="display:flex">
+                        <div style="width:70px; margin-left:15px; margin-top:5px;">开始日期:</div>
+                        <input type="text" style="width:150px;" class="form-control input-small input-inline" id="startDate">
+                        <div style="width:70px; margin-left:15px; margin-top:5px;">结束日期:</div>
+                        <input type="text" style="width:150px;" class="form-control input-small input-inline" id="endDate">
+                        <select id="selectCompany" style="margin-left:15px; width:260px;" class="form-control selectpicker "></select>
+                        <button id="btn_search" class="btn green" style="margin-left:20px;">
+                            查询 <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <section class="content">
+                <div class="row">
+                    <div id="divshow" class="col-md-12">
+
+                    </div>
+                </div>
+            </section>
+        </div>
+        <footer class="main-footer">
+            <div class="pull-right hidden-xs">
+                <b>Version</b> 1.0.0
+            </div>
+            <strong>Copyright &copy; 2018-2020 <a href="#">正大集团</a>.</strong> All rights reserved.
+        </footer>
+        <!-- Control Sidebar -->
+        <aside class="control-sidebar control-sidebar-dark">
+            <!-- Create the tabs -->
+            <ul class="nav nav-tabs nav-justified control-sidebar-tabs">
+                <li>
+                    <a href="#control-sidebar-home-tab" data-toggle="tab"><i class="fa fa-home"></i></a>
+                </li>
+            </ul>
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div class="tab-pane" id="control-sidebar-home-tab">
+                </div>
+            </div>
+        </aside>
+        <div class="control-sidebar-bg"></div>
+    </div>
+    <script src="../FXresource/plugins/jQuery/jquery-2.2.3.min.js"></script>
+    <script src="../FXresource/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../FXresource/dist/js/app.min.js"></script>
+    <script src="../FXresource/bootstrap/js/moment-with-locales.min.js"></script>
+    <script src="../FXresource/bootstrap/js/datetimepicker.min.js"></script>
+    <script src="../FXresource/dist/js/demo.js"></script>
+    <script src="../FXresource/bootstrap/js/Chart.bundle.js"></script>   
+    <script src="../FXresource/bootstrap/js/utils.js"></script>
+    <script src="../FXresource/plugins/datehelper.js"></script> 
+
+    <script src="../FXresource/bootstrap/js/6.1.4highcharts.js"></script>
+    <script src="../FXresource/bootstrap/js/6.1.4exporting.js"></script>
+    <script src="../FXresource/bootstrap/js/6.1.4series-label.js"></script>
+    <script src="../FXresource/bootstrap/js/6.1.4oldie.js"></script>
+    <script src="../FXresource/bootstrap/js/highcharts-zh_CN.js"></script>
+
+    <script type="text/javascript"> 
+        //获得日期
+        $(function () {
+            $("#startDate").datetimepicker({
+                format: 'YYYY-MM',
+                locale: moment.locale('zh-cn')
+            });
+
+            $("#endDate").datetimepicker({
+                format: 'YYYY-MM',
+                locale: moment.locale('zh-cn')
+            });
+            $("#endDate").val(GetDateYM(GetNowDate()));
+            $("#startDate").val(GetDateYM(GetDateByMonth(GetNowDate(), 8)));
+        });
+        var xDate = new Array();  //时间跨度
+        var numName1 = numName2 = numName3 = numName4 = numName5 = "";  //前五名编号
+        var showName1 = showName2 = showName3 = showName4 = showName5 = "";  //前五名名字显示
+
+          
+        //获取公司列表
+        $.ajax({
+            type: "Post",
+            url: "/api/Customer/CompanyList",
+            dataType: 'json',
+            success: function (data) { 
+                data = data.data;
+                for (var i = 0; i < data.length; i++) {
+                    var option = $("<option>").val(data[i].CODE).text(data[i].NAME);
+                    $("#selectCompany").append(option);
+                }
+                xDate = GetMonthArray($("#startDate").val(), $("#endDate").val());  //月份数组 ;
+                GetNum5();
+            }
+        });
+        
+    </script>
+</body>
+</html>

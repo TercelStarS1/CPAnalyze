@@ -4,7 +4,7 @@ using SZORM;
 namespace EntityInfos
 {
     /// <summary>
-    ///  公司编码
+    ///  
     /// </summary>
     [SZTable(IsView = true)]  ///   [SZTable(IsView =true)]这个特性的意思是如果你这个表已经存在了。就不创建了，如果需要我给你自动创建表。就不带这个
     public class ZB_FEED_COMPANY

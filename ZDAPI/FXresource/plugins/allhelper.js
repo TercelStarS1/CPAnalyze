@@ -54,11 +54,14 @@ $("#btnChangePwd").click(function () {
         type: "Post",
         url: "/api/Account/UserEditPwd",
         dataType: 'json',
-        data: { CODE: "0518", SCHEMA: $("#oldpwd").val(), PASSWORD: $("#newpwd").val() },
+        data: { CODE: localStorage.getItem('logincode'), SCHEMA: $("#oldpwd").val(), PASSWORD: $("#newpwd").val() },
         success: function (data) {
             if (data.num == 0) {
-                $("#changePWD").modal('hide'); 
+                $("#changePWD").modal('hide');
                 alert("修改成功");
+                $("#oldpwd").val("");
+                $("#newpwd").val("");
+                $("#newpwdc").val("");
             }
             else { 
 
