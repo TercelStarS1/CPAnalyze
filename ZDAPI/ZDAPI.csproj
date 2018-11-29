@@ -9,7 +9,7 @@
     <ProductVersion>
     </ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{0911557B-698D-402F-B456-57F5E2D185BB}</ProjectGuid>
+    <ProjectGuid>{7D4CD7B9-57D0-419E-B2DE-D326919E7837}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -801,7 +801,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EntityInfos\EntityInfos.csproj">
-      <Project>{253b67c6-8695-4082-a3e3-ea7549dcc212}</Project>
+      <Project>{4707d12c-bdf2-4357-889f-6653a66390fb}</Project>
       <Name>EntityInfos</Name>
     </ProjectReference>
     <ProjectReference Include="..\SZHelpers\Helpers_4.5.csproj">

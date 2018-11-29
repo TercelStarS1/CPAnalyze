@@ -6,7 +6,7 @@ namespace EntityInfos
     /// <summary>
     /// 用户  
     /// </summary>
-
+    [SZTable(IsView = true)]
     public class UserInfo:Basic
     {
         /// <summary>
