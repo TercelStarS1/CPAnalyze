@@ -121,7 +121,7 @@ namespace WebAPI.Controllers
                 }
                 else {
                     PBE_USER pinfo = new PBE_USER();
-                    pinfo.CODE = info.CODE;
+                    pinfo.CODE = info.CODE.Trim().ToLower();
                     pinfo.NAME = info.NAME;
                     pinfo.PASSWORD = info.CODE;
                     db.PBE_USER.Add(pinfo);

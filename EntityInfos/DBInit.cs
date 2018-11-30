@@ -45,18 +45,6 @@ namespace EntityInfos
 
         }
     }
-
-    public partial class ZDSYYC
-    {
-        protected override void Initialization()
-        {
-
-        }
-
-        protected override void UpdataDBExce()
-        {
-
-        }
-    }
+     
 
 }
