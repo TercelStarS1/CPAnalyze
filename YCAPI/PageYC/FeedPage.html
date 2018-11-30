@@ -60,8 +60,10 @@
         </div> 
     </div> 
 
-    <script type="text/javascript">  
-          
+    <script type="text/javascript">    
+        $("#sltbale").delegate("input", "keyup", function () {
+            clearNoFloat(this);
+        });  
         $.ajax({
             type: "Post",
             url: "/api/STD/FeedProject",
@@ -90,16 +92,17 @@
                          " <td>" + sllist[i].DAY_BEGIN + "</td>" +
                           " <td>" + sllist[i].DAY_END + "</td>" +
                            " <td>" + sllist[i].WGT + "</td>" +
-                        "<td style='padding:0px;'><input  type='text' value='" + sllist[i].FEEDFAC + "' class='form-control'></td>" +
-                        "<td style='padding:0px;'><input  type='text' value='" + sllist[i].MANAGEMENT + "' class='form-control'></td>" +
-                        "<td style='padding:0px;'><input  type='text'  value='" + sllist[i].FARM + "' class='form-control'></td>" +
+                        "<td style='padding:0px;'><input  type='text' maxlength='6' value='" + sllist[i].FEEDFAC + "' class='form-control'></td>" +
+                        "<td style='padding:0px;'><input  type='text' maxlength='6' value='" + sllist[i].MANAGEMENT + "' class='form-control'></td>" +
+                        "<td style='padding:0px;'><input  type='text' maxlength='6' value='" + sllist[i].FARM + "' class='form-control'></td>" +
                         "</tr> ";
             }
             $('#sltbale').html(slhtml);
-        }
+        } 
 
         $("#btn_add").click(function () {
 
+            return;
             var sllist = new Array();
             $('#sltbale tr').each(function (i) {
                 var slinfo = { FEED: $(this).children().eq(0).text(), FEEDFAC: $(this).children().eq(4).children().val(), MANAGEMENT: $(this).children().eq(5).children().val(), FARM: $(this).children().eq(6).children().val() };

@@ -58,9 +58,10 @@
         </div>
     </div>
 
-    <script type="text/javascript">
-
-
+    <script type="text/javascript"> 
+        $("#sltbale").delegate("input", "keyup", function () {
+            clearNoFloat(this);
+        });
         $.ajax({
             type: "Post",
             url: "/api/STD/VacProject",
@@ -79,16 +80,15 @@
                     xval = null;
                 }
             }
-        });
-
+        }); 
         function showTable(sllist) {
             var slhtml;
             for (var i = 0; i < sllist.length; i++) {
                 slhtml += "<tr>" +
                         " <td>" + sllist[i].CODE + "</td>" +
                          " <td>" + sllist[i].NAME + "</td>" +  
-                        "<td style='padding:0px;'><input  type='text' value='" + sllist[i].MANAGEMENT + "' class='form-control'></td>" +
-                        "<td style='padding:0px;'><input  type='text'  value='" + sllist[i].FARM + "' class='form-control'></td>" +
+                        "<td style='padding:0px;'><input  type='text' maxlength='6' value='" + sllist[i].MANAGEMENT + "' class='form-control'></td>" +
+                        "<td style='padding:0px;'><input  type='text' maxlength='6'  value='" + sllist[i].FARM + "' class='form-control'></td>" +
                         "</tr> ";
             }
             $('#sltbale').html(slhtml);

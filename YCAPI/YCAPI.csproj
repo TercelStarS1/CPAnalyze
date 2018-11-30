@@ -270,6 +270,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="PageYC\UserPage.html" />
     <Content Include="PageYC\VaccinePage.html" />
     <Content Include="PageYC\BasicDataPage.html" />
     <Content Include="PageYC\GrowPage.html" />

@@ -105,7 +105,9 @@
 	        data: { CODE: username, PASSWORD: userpwd },
 	        success: function (data) {  
 	            if (data.num == 1) {
-	                alert("用户名或密码错误，请重新输入");
+	                alert("用户名不存在或密码错误，请重新输入");
+	                removeClass(document.querySelector(".login"), "active");
+	                clearTimeout(jsqdl);
 	                removeClass(document.querySelector(".login"), "active")
 	                removeClass(document.querySelector(".sk-rotating-plane"), "active")
 	                document.querySelector(".login").style.display = "block"
@@ -129,6 +131,12 @@
                                "                <li> <a href='GrowPage.html'><i class='fa fa-circle-o'></i>生长标准管理</a> </li> " +
                                "            </ul> " +
                                "        </li> " +
+                                "        <li class='treeview'> " +
+                               "            <a href='#'><i class='fa fa-user'></i> <span>用户管理</span> <span class='pull-right-container'> <i class='fa fa-angle-left pull-right'></i> </span></a>" +
+                               "            <ul class='treeview-menu'> " +
+                               "                <li> <a href='UserPage.html'><i class='fa fa-circle-o'></i>用户管理</a> </li> " + 
+                               "            </ul> " +
+                               "        </li> " +
                                "    </ul> " +
                                "</section>";
 	                    localStorage.setItem('dhcontentYC', dh);
@@ -137,22 +145,20 @@
 	                localStorage.setItem('changepwdYC', changepwd);
 	                localStorage.setItem('loginUserYC', data.skin);  //顯示用戶名
 	                $.cookie('loginUserYC', data.data); 
-	                setTimeout(function () {
-	                    removeClass(document.querySelector(".login"), "active")
-	                    removeClass(document.querySelector(".sk-rotating-plane"), "active")
-	                    document.querySelector(".login").style.display = "block"
-	                    window.location.href = "PageYC/Start.html"
-	                }, 1500)
+	                window.location.href = "PageYC/Start.html";
 	            } 
 	        }
 	    });
 
 	    addClass(document.querySelector(".login"), "active")
-	    setTimeout(function () {
-	        addClass(document.querySelector(".sk-rotating-plane"), "active")
-	        document.querySelector(".login").style.display = "none"
-	    }, 600)  
-	}); 
+	    timedCount(); 
+	});
+	var jsqdl;
+	function timedCount() {
+	    addClass(document.querySelector(".sk-rotating-plane"), "active");
+	    document.querySelector(".login").style.display = "none";
+	    jsqdl = setTimeout("timedCount()", 5000);
+	}
     </script>
 </body>
 </html>

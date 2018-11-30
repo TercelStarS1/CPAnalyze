@@ -90,5 +90,80 @@ namespace WebAPI.Controllers
         }
 
 
+        /// <summary>
+        /// 返回所有用户列表
+        /// </summary>
+        /// <param name="info"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public IHttpActionResult UserList()
+        {
+            using (ZDSYYC db = new ZDSYYC())
+            { 
+                var user = db.PBE_USER.AsQuery().OrderBy(w=>w.CODE).ToList();
+
+                return Succeed(user);
+            }
+        }
+        /// <summary>
+        /// 添加用户
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public IHttpActionResult EidtUser(PBE_USER info)
+        {
+            using (ZDSYYC db = new ZDSYYC())
+            {
+                int user = db.PBE_USER.AsQuery().Where(w => w.CODE == info.CODE).Count();
+                if (user != 0)
+                {
+                    return Succeed(1);
+                }
+                else {
+                    PBE_USER pinfo = new PBE_USER();
+                    pinfo.CODE = info.CODE;
+                    pinfo.NAME = info.NAME;
+                    pinfo.PASSWORD = info.CODE;
+                    db.PBE_USER.Add(pinfo);
+                    db.Save();
+                    return Succeed("");
+                }
+                
+            }
+        }
+
+        /// <summary>
+        /// 用户密码重置
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public IHttpActionResult UserPwd(PBE_USER info)
+        {
+            using (ZDSYYC db = new ZDSYYC())
+            {
+                var sql = "update PBE_USER set password='"+ info.CODE+ "' where code='" + info.CODE + "'";
+                int allnum = db.ExecuteNoQuery(sql);
+                db.Save();
+                return Succeed("修改成功");
+            }
+        }
+
+
+        /// <summary>
+        /// 用户禁用
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public IHttpActionResult UserDisable(PBE_USER info)
+        {
+            using (ZDSYYC db = new ZDSYYC())
+            {
+                var sql = "update PBE_USER set password='" + info.CODE + "' where code='jy00001'";
+                int allnum = db.ExecuteNoQuery(sql);
+                db.Save();
+                return Succeed("禁用成功");
+            }
+        }
+
     }
 }

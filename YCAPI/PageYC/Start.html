@@ -95,12 +95,12 @@
                     <div class="col-md-12 divhead">
                         <span style="font-size:16px; font-weight:600; margin-right:20px;">养殖水平评估: </span>
                         <span>养殖头数</span>
-                        <input id="yzNum" type="text" class="form-control">
+                        <input id="yzNum" type="text" maxlength='6' class="form-control">
                         <span>代养费</span>
-                        <input id="yzDYF" type="text"  class="form-control">
+                        <input id="yzDYF" type="text" maxlength='6'  class="form-control">
                         <span>死淘率(%)</span> 
                         <div class="input-group spinner">
-                            <input type="text" class="form-control" id="yzSTL">
+                            <input type="text" class="form-control" maxlength='4' id="yzSTL">
                             <div class="input-group-btn-vertical">
                                 <button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
                                 <button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
@@ -108,16 +108,33 @@
                         </div>
                         <span>一等指率(%)</span>
                         <div class="input-group spinner">
-                            <input type="text" id="yzYDL" class="form-control" >
+                            <input type="text" id="yzYDL" maxlength='4' class="form-control" >
                             <div class="input-group-btn-vertical">
                                 <button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
                                 <button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
                             </div>
-                        </div> 
-                        <span>非一级猪均重比率</span>
+                        </div>  
+                        <span>非一级均重比率(%)</span>
+                        <div class="input-group spinner">
+                            <input type="text" id="noRa" maxlength='4' class="form-control">
+                            <div class="input-group-btn-vertical">
+                                <button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+                                <button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+                            </div>
+                        </div>
+                        <span>非一级价格比率(%)</span>
+                        <div class="input-group spinner">
+                            <input type="text" id="noWGT" maxlength='4' class="form-control">
+                            <div class="input-group-btn-vertical">
+                                <button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+                                <button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+                            </div>
+                        </div>  
+
+                        <!--<span>非一级猪均重比率%</span>
                         <input id="noRa" type="text" class="form-control">
-                        <span>猪价格比率</span>
-                        <input id="noWGT" type="text" class="form-control">
+                        <span>猪价格比率%</span>
+                        <input id="noWGT" type="text" class="form-control">-->
                          
                     </div>
                     <div class="col-md-12 table" style="margin-top:10px; border-radius:10px; display:flex;"> 
@@ -154,8 +171,8 @@
                                         <tbody>
                                             <tr>
                                                 <td>药品</td>
-                                                <td style="padding:0px;"><input id="YPCB" type="text" class="form-control"></td>
-                                                <td style="padding:0px;"><input id="YPHT" type="text" class="form-control"></td>
+                                                <td style="padding:0px;"><input id="YPCB" maxlength='6'  type="text" class="form-control"></td>
+                                                <td style="padding:0px;"><input id="YPHT" maxlength='6'  type="text" class="form-control"></td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -177,8 +194,8 @@
                                         <tbody>
                                             <tr> 
                                                 <td>猪苗</td>
-                                                <td style="padding:0px;"><input id="ZMCB" type="text" class="form-control"></td>
-                                                <td style="padding:0px;"><input id="ZMHT" type="text" class="form-control"></td>
+                                                <td style="padding:0px;"><input id="ZMCB" maxlength='6' type="text" class="form-control"></td>
+                                                <td style="padding:0px;"><input id="ZMHT" maxlength='6' type="text" class="form-control"></td>
                                             </tr> 
                                         </tbody>
                                     </table>
@@ -214,8 +231,8 @@
                                         <tbody>
                                             <tr>
                                                 <td>成品猪</td>
-                                                <td style="padding:0px;"><input type="text" id="CPSC" class="form-control"></td>
-                                                <td style="padding:0px;"><input type="text" id="CPHT" class="form-control"></td>
+                                                <td style="padding:0px;"><input type="text" id="CPSC" maxlength='6' class="form-control"></td>
+                                                <td style="padding:0px;"><input type="text" id="CPHT" maxlength='6' class="form-control"></td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -337,8 +354,7 @@
     <script type="text/javascript">   
         var NEWORADD = 0; //0新建  1编辑
         var pageshownum = 15;  //每页展示数据量
-        var numall = 0;   //总数据量
-
+        var numall = 0;   //总数据量 
         //下拉加减1
         $('.spinner .btn:first-of-type').on('click', function () {
             var endnum = parseFloat($(this).parent().prevAll('input').val()) + 0.1;
@@ -348,6 +364,12 @@
             var endnum = parseFloat($(this).parent().prevAll('input').val()) - 0.1;
             $(this).parent().prevAll('input').val(endnum.toFixed(1));
         });
+        $("#showXM").delegate("input", "keyup", function () {
+            clearNoFloat(this);
+        });
+        $("#yzNum").keyup(function () {
+            clearNoNum(this);
+        }); 
         //新建项目
         $("#btn_add").click(function () {
             NEWORADD = 0;
@@ -368,9 +390,9 @@
                     for (var i = 0; i < sllist.length; i++) {
                         slhtml +="<tr>"+
                                 " <td>" + sllist[i].CODE + "</td>" +   
-                                "<td style='padding:0px;'><input  type='text' value='" + sllist[i].FEEDFAC + "' class='form-control'></td>" +
-                                "<td style='padding:0px;'><input  type='text' value='" + sllist[i].MANAGEMENT + "' class='form-control'></td>" +
-                                "<td style='padding:0px;'><input  type='text'  value='" + sllist[i].FARM + "' class='form-control'></td>" +
+                                "<td style='padding:0px;'><input  type='text' maxlength='6' value='" + sllist[i].FEEDFAC + "' class='form-control'></td>" +
+                                "<td style='padding:0px;'><input  type='text' maxlength='6' value='" + sllist[i].MANAGEMENT + "' class='form-control'></td>" +
+                                "<td style='padding:0px;'><input  type='text' maxlength='6' value='" + sllist[i].FARM + "' class='form-control'></td>" +
                                 "</tr> "; 
                     }
                     $('#sltbale').html(slhtml);
@@ -381,8 +403,8 @@
                         ymhtml += " <tr>" +
                                 "<td>" + ymlist[i].CODE + "</td>" +
                                 "<td>" + ymlist[i].NAME + "</td>" +
-                                "<td style='padding:0px;'><input type='text' style='border:none; text-align:right;' value='" + ymlist[i].MANAGEMENT + "' class='form-control'></td>" +
-                                "<td style='padding:0px;'><input type='text' style='border:none; text-align:right;' value='" + ymlist[i].FARM + "' class='form-control'></td>" +
+                                "<td style='padding:0px;'><input type='text' maxlength='6' style='border:none; text-align:right;' value='" + ymlist[i].MANAGEMENT + "' class='form-control'></td>" +
+                                "<td style='padding:0px;'><input type='text' maxlength='6' style='border:none; text-align:right;' value='" + ymlist[i].FARM + "' class='form-control'></td>" +
                             "</tr> "; 
                     }
                     $('#ymtable').html(ymhtml);
@@ -533,10 +555,20 @@
                 },
                 success: function (data) {  
                     numall = data.data;  //总数据量
-                    var allpage = Math.ceil(numall / pageshownum);
-                    ShowPage("#fyshow", 1, allpage, shownowpage);   //ul ID 当前选中页码 总页数 回调函数 
-                    ShowProject(1, pageshownum);
-                }  
+                    console.log(numall);
+                    if (numall == 0) {
+                        if (xval) {
+                            xval.remove();
+                            xval = null;
+                        }
+                    }
+                    else {
+                        var allpage = Math.ceil(numall / pageshownum);
+                        ShowPage("#fyshow", 1, allpage, shownowpage);   //ul ID 当前选中页码 总页数 回调函数 
+                        ShowProject(1, pageshownum);
+                    } 
+                } 
+                
             }) 
         }
         function shownowpage(page) {
