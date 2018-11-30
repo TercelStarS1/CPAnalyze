@@ -17,7 +17,7 @@ namespace WebAPI.Controllers
         public STDController()
         {
         }
-         
+
         /// <summary>
         /// 疫苗使用标准
         /// </summary>
@@ -30,7 +30,7 @@ namespace WebAPI.Controllers
             {
                 var sql = "select t1.DAYS, t1.vaccine,t1.qty,t2.name VARIETY from  PBE_STDVACCINE t1 join PBE_VACCINE t2 on( t1.vaccine = t2.code )";
                 var query = db.ExecuteSqlToList<PBE_STDVACCINE>(sql).ToList();
-                return Succeed(query); 
+                return Succeed(query);
             }
         }
 
@@ -65,11 +65,99 @@ namespace WebAPI.Controllers
                 var query3 = db.PBE_STD.AsQuery().ToList().Where(w => w.PROJECT == "001").ToList();    //日龄相关标准  
                 var query4 = db.PBE_MEDICINECOST.AsQuery().Where(w => w.PROJECT == "001").ToList();   //药品标准
                 var query5 = db.PBE_PIGLETCOST.AsQuery().Where(w => w.PROJECT == "001").ToList();   //猪苗标准
-                var query6 = db.PBE_PIGMARKETPRICE.AsQuery().Where(w=>w.PROJECT=="001").ToList();   //种猪标准
+                var query6 = db.PBE_PIGMARKETPRICE.AsQuery().Where(w => w.PROJECT == "001").ToList();   //种猪标准
                 var query = new { ymlist = query1, sllist = query2, rllist = query3, yplist = query4, zmlist = query5, zzlist = query6 };
                 return Succeed(query);
             }
         }
+
+        [HttpPost]
+        public IHttpActionResult FeedProject()
+        {
+            using (ZDSYYC db = new ZDSYYC())
+            {
+                var query = db.PBE_FEED.AsQuery().ToList();    //饲料标准
+
+                return Succeed(query);
+            }
+        }
+
+        [HttpPost]
+        public IHttpActionResult FeedEidt(PBE_LIST infos)
+        {
+            using (ZDSYYC db = new ZDSYYC())
+            {
+                foreach (var item in infos.PBE_FEEDCOSTList)
+                {
+                    var sql = "update PBE_FEED set feedfac=" + item.FEEDFAC + " ,management=" + item.MANAGEMENT + ", faRm=" + item.FARM + " where code ='" + item.FEED + "'";
+                    int allnum = db.ExecuteNoQuery(sql);
+                }
+                db.Save();
+                return Succeed(db.PBE_FEED.AsQuery().ToList());
+            }
+        }
+
+        [HttpPost]
+        public IHttpActionResult VacProject()
+        {
+            using (ZDSYYC db = new ZDSYYC())
+            {
+                var query = db.PBE_VACCINE.AsQuery().ToList();    //饲料标准
+
+                return Succeed(query);
+            }
+        }
+
+        [HttpPost]
+        public IHttpActionResult VacEidt(PBE_LIST infos)
+        {
+            using (ZDSYYC db = new ZDSYYC())
+            {
+                foreach (var item in infos.PBE_VACCINECOSTList)
+                {
+                    var sql = "update pbe_Vaccine set  management=" + item.MANAGEMENT + ", faRm=" + item.FARM + " where code ='" + item.CODE + "'";
+                    int allnum = db.ExecuteNoQuery(sql);
+                }
+                db.Save();
+                return Succeed(db.PBE_VACCINE.AsQuery().ToList());
+            }
+        }
+
+        [HttpPost]
+        public IHttpActionResult BasicProject()
+        {
+            using (ZDSYYC db = new ZDSYYC())
+            {
+                var query3 = db.PBE_STD.AsQuery().ToList().Where(w => w.PROJECT == "001").ToList();    //日龄相关标准  
+                var query4 = db.PBE_MEDICINECOST.AsQuery().Where(w => w.PROJECT == "001").ToList();   //药品标准
+                var query5 = db.PBE_PIGLETCOST.AsQuery().Where(w => w.PROJECT == "001").ToList();   //猪苗标准
+                var query6 = db.PBE_PIGMARKETPRICE.AsQuery().Where(w => w.PROJECT == "001").ToList();   //种猪标准
+                var query = new { rllist = query3, yplist = query4, zmlist = query5, zzlist = query6 };
+
+                return Succeed(query);
+            }
+        }
+
+        [HttpPost]
+        public IHttpActionResult BasicEidt(PBE_LIST infos)
+        {
+            using (ZDSYYC db = new ZDSYYC())
+            {
+                //项目
+                var sql = "update pbe_std set PIGLETQTY= " + infos.PBE_PROJECTINFO.PIGLETQTY + ",ADJUSTFEE=" + infos.PBE_PROJECTINFO.ADJUSTFEE + ",CULLINGRATE=" + infos.PBE_PROJECTINFO.CULLINGRATE + ",PERFECTRATE=" + infos.PBE_PROJECTINFO.PERFECTRATE + ",NOPERFRATE=" + infos.PBE_PROJECTINFO.NOPERFRATE + ",NOPERFWGTRATE=" + infos.PBE_PROJECTINFO.NOPERFWGTRATE + " where project='001'";
+                int allnum = db.ExecuteNoQuery(sql);
+
+                var sql1 = "update PBE_PIGLETCOST set management = " + infos.PBE_PIGLETCOSTINFO.MANAGEMENT + ", farm =" + infos.PBE_PIGLETCOSTINFO.FARM + " where project = '001'";
+                int allnum1 = db.ExecuteNoQuery(sql1);
+                var sql2 = "update PBE_PIGMARKETPRICE set CONTRACT = " + infos.PBE_PIGMARKETPRICEINFO.CONTRACT + ", MARKET =" + infos.PBE_PIGMARKETPRICEINFO.MARKET + " where project = '001'";
+                int allnum2 = db.ExecuteNoQuery(sql2);
+                var sql3 = "update PBE_MEDICINECOST set MANAGEMENT = " + infos.PBE_MEDICINECOSTINFO.MANAGEMENT + ", FARM =" + infos.PBE_MEDICINECOSTINFO.FARM + " where project = '001'";
+                  int allnum3 = db.ExecuteNoQuery(sql3);
+                db.Save(); 
+                return Succeed("");
+            }
+        }
+
 
         /// <summary>
         /// 项目详情
@@ -82,7 +170,9 @@ namespace WebAPI.Controllers
             {
                 var query1 = db.PBE_VACCINECOST.AsQuery().Where(w => w.PROJECT == info.PROJECT).ToList();  //疫苗标准
                 var query2 = db.PBE_FEEDCOST.AsQuery().Where(w => w.PROJECT == info.PROJECT).ToList();    //饲料标准
-                var query3 = db.PBE_PROJECT.AsQuery().Where(w => w.PROJECT == info.PROJECT).ToList();    //日龄相关标准  
+                var sql = "select user1,project,inday,inwgt,outday,outwgt,pigletqty,indate,cullingrate,perfectrate,noperfrate,noperfwgtrate,noperfpricerate,adjustfee from PBE_PROJECT t where t.project = '" + info.PROJECT + "'";
+                var query3 = db.ExecuteSqlToList<PBE_PROJECT>(sql).ToList();
+
                 var query4 = db.PBE_MEDICINECOST.AsQuery().Where(w => w.PROJECT == info.PROJECT).ToList();   //药品标准
                 var query5 = db.PBE_PIGLETCOST.AsQuery().Where(w => w.PROJECT == info.PROJECT).ToList();   //猪苗标准
                 var query6 = db.PBE_PIGMARKETPRICE.AsQuery().Where(w => w.PROJECT == info.PROJECT).ToList();   //种猪标准
@@ -104,26 +194,27 @@ namespace WebAPI.Controllers
                 string projectID = "";
                 if (info.Skin != "0")  //如果是编辑状态，删除在添加
                 {
-                    projectID = info.Skin; 
-                    db.PBE_PROJECT.Remove(w =>w.PROJECT ==projectID);
+                    projectID = info.Skin;
+                    db.PBE_PROJECT.Remove(w => w.PROJECT == projectID);
                     db.PBE_FEEDCOST.Remove(w => w.PROJECT == projectID);
                     db.PBE_VACCINECOST.Remove(w => w.PROJECT == projectID);
                     db.PBE_PIGLETCOST.Remove(w => w.PROJECT == projectID);
                     db.PBE_PIGMARKETPRICE.Remove(w => w.PROJECT == projectID);
-                    db.PBE_MEDICINECOST.Remove(w => w.PROJECT == projectID); 
+                    db.PBE_MEDICINECOST.Remove(w => w.PROJECT == projectID);
                 }
                 if (projectID == "")
                 {
-                    var sql = "select max(project)from PBE_PROJECT where user1 = '"+info.User+"'";
+                    var sql = "select max(project)from PBE_PROJECT where user1 = '" + info.User + "'";
                     string num = db.ExecuteScalar(sql).ToString();
                     if (num == "")
                     {
                         projectID = info.User + "0001";
                     }
-                    else {
+                    else
+                    {
                         int nnn = int.Parse(num.Substring(num.Length - 4)) + 1;
                         projectID = info.User + string.Format("{0:0000}", nnn);
-                    } 
+                    }
                 }
                 //饲料
                 int id = 0;
@@ -162,8 +253,8 @@ namespace WebAPI.Controllers
                 pebinfo.OUTWGT = query3[0].OUTWGT;
                 pebinfo.NOPERFWGTRATE = query3[0].NOPERFWGTRATE;
                 pebinfo.NOPERFPRICERATE = query3[0].NOPERFPRICERATE;
-                pebinfo.NOPERFRATE = 100- info.PBE_PROJECTINFO.PERFECTRATE;
-                 
+                pebinfo.NOPERFRATE = 100 - info.PBE_PROJECTINFO.PERFECTRATE;
+
                 pebinfo.USER1 = info.User;
                 pebinfo.PROJECT = projectID;  // 进猪数量   代养费   死淘   一级
                 pebinfo.PIGLETQTY = info.PBE_PROJECTINFO.PIGLETQTY;
@@ -190,7 +281,7 @@ namespace WebAPI.Controllers
                 pebmed.MANAGEMENT = info.PBE_MEDICINECOSTINFO.MANAGEMENT;
                 pebmed.FARM = info.PBE_MEDICINECOSTINFO.FARM;
                 db.PBE_MEDICINECOST.Add(pebmed);
-                db.Save();  
+                db.Save();
 
                 return Succeed(projectID);
             }
@@ -210,12 +301,14 @@ namespace WebAPI.Controllers
             {
                 if (info.USER1 == "admin")
                 {
-                    var query = db.PBE_PROJECT.AsQuery().Count();
+                    var sql = "select user1  from PBE_PROJECT t";
+                    var query = db.ExecuteSqlToList<PBE_PROJECT>(sql).ToList().Count();
                     return Succeed(query);
                 }
                 else
                 {
-                    var query = db.PBE_PROJECT.AsQuery().Where(m => m.USER1 == info.USER1).Count();
+                    var sql = "select user1  from PBE_PROJECT t where t.user1 = '" + info.USER1 + "'";
+                    var query = db.ExecuteSqlToList<PBE_PROJECT>(sql).ToList().Count();
                     return Succeed(query);
                 }
             }
@@ -224,18 +317,26 @@ namespace WebAPI.Controllers
         [HttpPost]
         public IHttpActionResult ProjectList(PBE_PROJECT info)
         {
+            decimal startNUM = info.INDAY * info.OUTDAY - info.OUTDAY;
+            decimal endNUM = startNUM + info.OUTDAY;
+
             using (ZDSYYC db = new ZDSYYC())
             {
                 if (info.USER1 == "admin")
                 {
-                    var query = db.PBE_PROJECT.AsQuery().OrderByDesc(m=>m.PROJECT).ToList();
+                    var sql = "select tt.* ,rownum INDAY from(select user1,project,inwgt,outday,outwgt,pigletqty,indate,cullingrate,perfectrate,noperfrate,noperfwgtrate,noperfpricerate,adjustfee from PBE_PROJECT t order by project) tt";
+                    var query = db.ExecuteSqlToList<PBE_PROJECT>(sql);
+                    query = query.Where(s => s.INDAY > startNUM & s.INDAY <= endNUM).ToList();
                     return Succeed(query);
                 }
                 else
                 {
-                    var query = db.PBE_PROJECT.AsQuery().Where(m=>m.USER1 == info.USER1).OrderByDesc(m => m.PROJECT).ToList();
+                    var sql = "select tt.* ,rownum INDAY from(select user1,project,inwgt,outday,outwgt,pigletqty,indate,cullingrate,perfectrate,noperfrate,noperfwgtrate,noperfpricerate,adjustfee from PBE_PROJECT t where " +
+                                " t.user1 = '" + info.USER1 + "'order by project) tt";
+                    var query = db.ExecuteSqlToList<PBE_PROJECT>(sql);
+                    query = query.Where(s => s.INDAY > startNUM & s.INDAY <= endNUM).ToList();
                     return Succeed(query);
-                } 
+                }
             }
         }
 
@@ -243,21 +344,21 @@ namespace WebAPI.Controllers
         public IHttpActionResult ShowProfit(PBE_PROJECT info)
         {
             using (ZDSYYC db = new ZDSYYC())
-            { 
-                var query = db.PBE_V_BUDGET.AsQuery().Where(w => w.PROJECT == info.PROJECT).ToList()[0];  
-                var feedCost = query.Feedfac; 
+            {
+                var query = db.PBE_V_BUDGET.AsQuery().Where(w => w.PROJECT == info.PROJECT).ToList()[0];
+                var feedCost = query.Feedfac;
                 var feedIncome = query.Feedmanagement;
-                var feedProfit = feedIncome- feedCost;
+                var feedProfit = feedIncome - feedCost;
                 //
-                var manCost = query.Feedmanagement + query.Medmanagement + query.VacMANAGEMENT + query.PigletMANA + query.Contract;
+                var manCost = query.Feedmanagement + query.Medmanagement + query.VacMANAGEMENT + query.PigletMANA + query.Contract + query.ADJUSTFEE;
                 var manIncome = query.Feedfarm + query.Medfarm + query.VacFARM + query.PigletFARM + query.Market;
                 var manProfit = manIncome - manCost;
 
-                var farmCost = query.Feedfarm + query.Medfarm + query.VacFARM + query.PigletFARM + query.Market;
-                var farmIncome = query.Contract + query.Contract;
-                var farmProfit = farmIncome-farmCost;
-                var result = new string [9,2]{ { "feedCost", feedCost.ToString("0.00") }, { "feedIncome", feedIncome.ToString("0.00") }, { "feedProfit", feedProfit.ToString("0.00") }, { "manCost", manCost.ToString("0.00") }, { "manIncome", manIncome.ToString("0.00") }, { "manProfit", manProfit.ToString("0.00") }, { "farmCost", farmCost.ToString("0.00") }, { "farmIncome", farmIncome.ToString("0.00") }, { "farmProfit", farmProfit.ToString("0.00") } };
-  
+                var farmCost = query.Feedfarm + query.Medfarm + query.VacFARM + query.PigletFARM;
+                var farmIncome = query.Contract + query.ADJUSTFEE;
+                var farmProfit = farmIncome - farmCost;
+                var result = new string[9, 2] { { "feedCost", feedCost.ToString("0.00") }, { "feedIncome", feedIncome.ToString("0.00") }, { "feedProfit", feedProfit.ToString("0.00") }, { "manCost", manCost.ToString("0.00") }, { "manIncome", manIncome.ToString("0.00") }, { "manProfit", manProfit.ToString("0.00") }, { "farmCost", farmCost.ToString("0.00") }, { "farmIncome", farmIncome.ToString("0.00") }, { "farmProfit", farmProfit.ToString("0.00") } };
+
                 //Dictionary<string, string> dictionary = new Dictionary<string, string>();
                 //dictionary.Add("feedCost", feedCost.ToString("0.00"));
                 //dictionary.Add("feedIncome", feedIncome.ToString("0.00"));

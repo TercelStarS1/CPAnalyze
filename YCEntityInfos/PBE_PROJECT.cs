@@ -77,6 +77,6 @@ namespace EntityInfos
         /// <summary>
         /// 代养费
         /// </summary>
-        public decimal ADJUSTFEE { get; set; }
+        public decimal ADJUSTFEE { get; set; } 
     } 
 }

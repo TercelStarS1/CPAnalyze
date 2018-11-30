@@ -5908,6 +5908,7 @@ h6 {
 .note-danger .box-heading {
     color: #d9534f;
 }
+/*
 .pagination {
     -webkit-border-radius: 0 !important;
     -moz-border-radius: 0 !important;
@@ -5941,6 +5942,7 @@ h6 {
     border-bottom-right-radius: 0 !important;
     border-top-right-radius: 0 !important;
 }
+    */
 .badge {
     font-size: 11px !important;
     font-weight: 300;
@@ -6036,6 +6038,7 @@ a.list-group-item.active > .badge,
 .nav-pills > .active > a > .badge {
     color: #e74c3c;
 }
+/*
 .pagination li.active a {
     color: #FFFFFF;
     background: #e74c3c;
@@ -6065,6 +6068,7 @@ a.list-group-item.active > .badge,
 .pagination li a {
     color: #e74c3c;
 }
+    */
 .panel {
     -webkit-box-shadow: none !important;
     box-shadow: none !important;

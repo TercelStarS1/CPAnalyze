@@ -107,3 +107,4 @@ E:\ZD\ZDFXYM\SZHelpers\bin\Debug\NPOI.OOXML.dll
 E:\ZD\ZDFXYM\SZHelpers\bin\Debug\NPOI.OpenXml4Net.dll
 E:\ZD\ZDFXYM\SZHelpers\obj\Debug\Helpers.dll
 E:\ZD\ZDFXYM\SZHelpers\obj\Debug\Helpers.pdb
+E:\ZD\ZDFXYM\SZHelpers\obj\Debug\Helpers_4.5.csprojResolveAssemblyReference.cache

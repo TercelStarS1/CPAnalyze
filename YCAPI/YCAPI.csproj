@@ -270,6 +270,10 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="PageYC\VaccinePage.html" />
+    <Content Include="PageYC\BasicDataPage.html" />
+    <Content Include="PageYC\GrowPage.html" />
+    <Content Include="PageYC\FeedPage.html" />
     <Content Include="PageYC\Start.html" />
     <Content Include="PageYC\TemplateHead.html" />
     <Content Include="ResourceYC\bootstrap\css\bootstrap.css" />
@@ -387,6 +391,8 @@
     <Content Include="ResourceYC\plugins\jquery.cookie.js" />
     <Content Include="ResourceYC\plugins\jQuery\jquery-2.2.3.min.js" />
     <Content Include="ResourceYC\plugins\pagefyhelper.js" />
+    <Content Include="ResourceYC\resource\css\start.css" />
+    <Content Include="ResourceYC\resource\js\Grow-editable.js" />
     <Content Include="ResourceYC\StarResource\css\font-awesome.min.css" />
     <Content Include="ResourceYC\StarResource\css\ionicons.min.css" />
     <Content Include="ResourceYC\StarResource\js\html5shiv.min.js" />
@@ -548,7 +554,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="ResourceYC\resource\js\" />
     <Folder Include="ResourceYC\StarResource\img\" />
   </ItemGroup>
   <ItemGroup>
