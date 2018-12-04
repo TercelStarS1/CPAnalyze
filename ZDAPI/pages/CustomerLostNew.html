@@ -51,7 +51,7 @@
                 format: 'YYYY-MM',
                 locale: moment.locale('zh-cn')
             }); 
-            $("#startDate").val(GetDateYM(GetDateByMonth(GetNowDate(),10)));
+            $("#startDate").val(GetDateYM(GetDateByMonth(GetNowDate(),11)));
         });
         var xDate = new Array();  //时间跨度
         var numName1 = numName2 = numName3 = numName4 = numName5 = "";  //前五名编号
@@ -63,10 +63,10 @@
         var etime;
         
 
-        xDate = GetMonthArray(GetDateYM(GetDateByMonth(GetNowDate(), 10)), GetNowDate());
+        xDate = GetMonthArray(GetDateYM(GetDateByMonth(GetNowDate(), 11)), GetNowDate());
         $("#selectCompany").html(localStorage.getItem('companyData'));
         skincompany = $('#selectCompany option:selected').val();
-        GetNum5(1, pageshownum, 0,GetDateYM(GetDateByMonth(GetNowDate(), 10)));
+        GetNum5(1, pageshownum, 0,GetDateYM(GetDateByMonth(GetNowDate(), 11)));
           
         //点击查询
         $("#btn_search").click(function () { 

@@ -216,28 +216,24 @@ namespace WebAPI.Controllers
                         projectID = info.User + string.Format("{0:0000}", nnn);
                     }
                 }
-                //饲料
-                int id = 0;
+                //饲料 
                 foreach (var item in info.PBE_FEEDCOSTList)
-                {
-                    id++;
+                { 
                     PBE_FEEDCOST infos = new PBE_FEEDCOST();
                     infos.PROJECT = projectID;
-                    infos.ID = id;
+                    infos.ID = item.ID;
                     infos.FEED = item.FEED;
                     infos.FEEDFAC = item.FEEDFAC;
                     infos.MANAGEMENT = item.MANAGEMENT;
                     infos.FARM = item.FARM;
                     db.PBE_FEEDCOST.Add(infos);
                 }
-                //疫苗
-                id = 0;
+                //疫苗 
                 foreach (var item in info.PBE_VACCINECOSTList)
-                {
-                    id++;
+                { 
                     PBE_VACCINECOST infos = new PBE_VACCINECOST();
                     infos.PROJECT = projectID;
-                    infos.ID = id;
+                    infos.ID = item.ID;
                     infos.CODE = item.CODE;
                     infos.NAME = item.NAME;
                     infos.MANAGEMENT = item.MANAGEMENT;

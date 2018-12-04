@@ -66,14 +66,14 @@
                 locale: moment.locale('zh-cn')
             });
             $("#endDate").val(GetDateYM(GetNowDate()));
-            $("#startDate").val(GetDateYM(GetDateByMonth(GetNowDate(), 10)));
+            $("#startDate").val(GetDateYM(GetDateByMonth(GetNowDate(), 11)));
         });
          
           
-        xDate = GetMonthArray(GetDateYM(GetDateByMonth(GetNowDate(), 10)), GetDateYM(GetNowDate()));
+        xDate = GetMonthArray(GetDateYM(GetDateByMonth(GetNowDate(), 11)), GetDateYM(GetNowDate()));
         $("#selectCompany").html(localStorage.getItem('companyData')); 
         skincompany = $('#selectCompany option:selected').val();
-        stime = GetDateYM(GetDateByMonth(GetNowDate(), 10));
+        stime = GetDateYM(GetDateByMonth(GetNowDate(), 11));
         etime = GetDateYM(GetNowDate());
         GetNum5(1, pageshownum, 0, stime, etime);
 

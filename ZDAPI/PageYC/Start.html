@@ -95,9 +95,9 @@
                     <div class="col-md-12 divhead">
                         <span style="font-size:16px; font-weight:600; margin-right:20px;">养殖水平评估: </span>
                         <span>养殖头数</span>
-                        <input id="yzNum" type="text" maxlength='6' class="form-control">
+                        <input id="yzNum" type="text" maxlength='8' class="form-control">
                         <span>代养费</span>
-                        <input id="yzDYF" type="text" maxlength='6'  class="form-control">
+                        <input id="yzDYF" type="text" maxlength='8'  class="form-control">
                         <span>死淘率(%)</span> 
                         <div class="input-group spinner">
                             <input type="text" class="form-control" maxlength='4' id="yzSTL">
@@ -106,7 +106,7 @@
                                 <button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
                             </div>
                         </div>
-                        <span>一等指率(%)</span>
+                        <span>一等猪率(%)</span>
                         <div class="input-group spinner">
                             <input type="text" id="yzYDL" maxlength='4' class="form-control" >
                             <div class="input-group-btn-vertical">
@@ -114,7 +114,7 @@
                                 <button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
                             </div>
                         </div>  
-                        <span>非一级均重比率(%)</span>
+                        <span>非一等猪均重比率(%)</span>
                         <div class="input-group spinner">
                             <input type="text" id="noRa" maxlength='4' class="form-control">
                             <div class="input-group-btn-vertical">
@@ -122,19 +122,14 @@
                                 <button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
                             </div>
                         </div>
-                        <span>非一级价格比率(%)</span>
+                        <span>非一等猪价格比率(%)</span>
                         <div class="input-group spinner">
                             <input type="text" id="noWGT" maxlength='4' class="form-control">
                             <div class="input-group-btn-vertical">
                                 <button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
                                 <button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
                             </div>
-                        </div>  
-
-                        <!--<span>非一级猪均重比率%</span>
-                        <input id="noRa" type="text" class="form-control">
-                        <span>猪价格比率%</span>
-                        <input id="noWGT" type="text" class="form-control">-->
+                        </div>   
                          
                     </div>
                     <div class="col-md-12 table" style="margin-top:10px; border-radius:10px; display:flex;"> 
@@ -171,8 +166,8 @@
                                         <tbody>
                                             <tr>
                                                 <td>药品</td>
-                                                <td style="padding:0px;"><input id="YPCB" maxlength='6'  type="text" class="form-control"></td>
-                                                <td style="padding:0px;"><input id="YPHT" maxlength='6'  type="text" class="form-control"></td>
+                                                <td style="padding:0px;"><input id="YPCB" maxlength='8'  type="text" class="form-control"></td>
+                                                <td style="padding:0px;"><input id="YPHT" maxlength='8'  type="text" class="form-control"></td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -194,8 +189,8 @@
                                         <tbody>
                                             <tr> 
                                                 <td>猪苗</td>
-                                                <td style="padding:0px;"><input id="ZMCB" maxlength='6' type="text" class="form-control"></td>
-                                                <td style="padding:0px;"><input id="ZMHT" maxlength='6' type="text" class="form-control"></td>
+                                                <td style="padding:0px;"><input id="ZMCB" maxlength='8' type="text" class="form-control"></td>
+                                                <td style="padding:0px;"><input id="ZMHT" maxlength='8' type="text" class="form-control"></td>
                                             </tr> 
                                         </tbody>
                                     </table>
@@ -224,15 +219,15 @@
                                         <thead>
                                             <tr>
                                                 <th>名称</th>
-                                                <th>市场价(元/头)</th>
-                                                <th>合同价(元/头)</th>
+                                                <th>市场价(元/kg)</th>
+                                                <th>合同价(元/kg)</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
                                                 <td>成品猪</td>
-                                                <td style="padding:0px;"><input type="text" id="CPSC" maxlength='6' class="form-control"></td>
-                                                <td style="padding:0px;"><input type="text" id="CPHT" maxlength='6' class="form-control"></td>
+                                                <td style="padding:0px;"><input type="text" id="CPSC" maxlength='8' class="form-control"></td>
+                                                <td style="padding:0px;"><input type="text" id="CPHT" maxlength='8' class="form-control"></td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -268,7 +263,7 @@
                                 <button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
                             </div>
                         </div>
-                        <span>一等指率(%)</span>
+                        <span>一等猪率(%)</span>
                         <div class="input-group spinner">
                             <input type="text" id="yzYDL1" maxlength='4' class="form-control">
                             <div class="input-group-btn-vertical">
@@ -416,13 +411,14 @@
                 success: function (data) { 
                     //饲料数据
                     var slhtml = "";
-                    var sllist = data.data.sllist; 
+                    var sllist = data.data.sllist;
+                    console.log(sllist);
                     for (var i = 0; i < sllist.length; i++) {
                         slhtml +="<tr>"+
                                 " <td>" + sllist[i].CODE + "</td>" +   
-                                "<td style='padding:0px;'><input  type='text' maxlength='6' value='" + sllist[i].FEEDFAC + "' class='form-control'></td>" +
-                                "<td style='padding:0px;'><input  type='text' maxlength='6' value='" + sllist[i].MANAGEMENT + "' class='form-control'></td>" +
-                                "<td style='padding:0px;'><input  type='text' maxlength='6' value='" + sllist[i].FARM + "' class='form-control'></td>" +
+                                "<td style='padding:0px;'><input  type='text' maxlength='8' vid=" + sllist[i].ID + " value='" + sllist[i].FEEDFAC + "' class='form-control'></td>" +
+                                "<td style='padding:0px;'><input  type='text' maxlength='8' value='" + sllist[i].MANAGEMENT + "' class='form-control'></td>" +
+                                "<td style='padding:0px;'><input  type='text' maxlength='8' value='" + sllist[i].FARM + "' class='form-control'></td>" +
                                 "</tr> "; 
                     }
                     $('#sltbale').html(slhtml);
@@ -433,8 +429,8 @@
                         ymhtml += " <tr>" +
                                 "<td>" + ymlist[i].CODE + "</td>" +
                                 "<td>" + ymlist[i].NAME + "</td>" +
-                                "<td style='padding:0px;'><input type='text' maxlength='6' style='border:none; text-align:right;' value='" + ymlist[i].MANAGEMENT + "' class='form-control'></td>" +
-                                "<td style='padding:0px;'><input type='text' maxlength='6' style='border:none; text-align:right;' value='" + ymlist[i].FARM + "' class='form-control'></td>" +
+                                "<td style='padding:0px;'><input type='text' maxlength='8' style='border:none; text-align:right;' vid=" + sllist[i].ID + "  value='" + ymlist[i].MANAGEMENT + "' class='form-control'></td>" +
+                                "<td style='padding:0px;'><input type='text' maxlength='8' style='border:none; text-align:right;' value='" + ymlist[i].FARM + "' class='form-control'></td>" +
                             "</tr> "; 
                     }
                     $('#ymtable').html(ymhtml);
@@ -468,13 +464,13 @@
             //疫苗 
             var ymlist = new Array();
             $('#ymtable tr').each(function (i) {
-                var yminfo = { CODE: $(this).children().eq(0).text(), NAME: $(this).children().eq(1).text(), MANAGEMENT: $(this).children().eq(2).children().val(), FARM: $(this).children().eq(3).children().val() };
+                var yminfo = { ID: $(this).children().eq(2).children().attr("vid"), CODE: $(this).children().eq(0).text(), NAME: $(this).children().eq(1).text(), MANAGEMENT: $(this).children().eq(2).children().val(), FARM: $(this).children().eq(3).children().val() };
                 ymlist.push(yminfo);
             });
             //饲料 sltbale
             var sllist = new Array();
             $('#sltbale tr').each(function (i) {
-                var slinfo = { FEED: $(this).children().eq(0).text(), FEEDFAC: $(this).children().eq(1).children().val(), MANAGEMENT: $(this).children().eq(2).children().val(), FARM: $(this).children().eq(3).children().val() };
+                var slinfo = { ID: $(this).children().eq(1).children().attr("vid"), FEED: $(this).children().eq(0).text(), FEEDFAC: $(this).children().eq(1).children().val(), MANAGEMENT: $(this).children().eq(2).children().val(), FARM: $(this).children().eq(3).children().val() };
                 sllist.push(slinfo);
             });  
             // 猪苗  ZMCB  ZMHT
