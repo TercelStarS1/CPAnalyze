@@ -690,7 +690,7 @@ namespace WebAPI.Controllers
                 int startNUM = info.PageNum * info.ShowNum - info.ShowNum;
                 int endNUM = startNUM + info.ShowNum;
 
-                var sqlNum = "select a1.salesperson code ,a1.num,a1.rn,a2.name from ( select  salesperson,   num, rownum rn from ( select salesperson, count(salesperson) num  from (  select ccc.*,row_number() over(partition by  customer, company order by eff_date desc) cn from  " +
+                var sqlNum = "select distinct a1.salesperson code ,a1.num,a1.rn,a2.name from ( select  salesperson,   num, rownum rn from ( select salesperson, count(salesperson) num  from (  select ccc.*,row_number() over(partition by  customer, company order by eff_date desc) cn from  " +
                       " (select aaa.salesperson, aaa.customer, aaa.company, aaa.eff_date, bbb.doc_date, bbb.wgt from zb_feed_salesp_cust aaa join   (  select * from (select customer, doc_date, wgt, amt, company, row_number() over(partition by  customer, company order by doc_date desc) cn from zb_feed_sale bbb where customer in " +
                       " (select  customer from(select  distinct customer from zb_feed_sale where company = '" + company + "' and  doc_date > to_date('" + beginDate + "', 'yyyy-mm-dd'))aaa" +
                       "  where customer not in (select distinct customer  from zb_feed_sale where company = '" + company + "' and doc_date > to_date('" + startDate + "', 'yyyy-mm-dd')) and customer not like '9%' " +
@@ -700,8 +700,8 @@ namespace WebAPI.Controllers
                 var query = db.ExecuteSqlToList<ZB_FEED_CUSTOMER>(sqlNum);
                 int num = query.Count();
 
-                query = query.Where(s => s.RN > startNUM  & s.RN<= endNUM);
-                List<ZB_FEED_CUSTOMER> result = query.ToList();
+                var query1 = query.Where(s => s.RN > startNUM).Where(s=>s.RN <= endNUM);
+                List<ZB_FEED_CUSTOMER> result = query1.ToList();
                 num5saleslost = "";
                 foreach (var ZB_FEED_CUSTOMER in result)
                 {

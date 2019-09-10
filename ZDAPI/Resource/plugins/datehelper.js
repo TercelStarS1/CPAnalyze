@@ -118,7 +118,6 @@ function GetMonthArray(d1, d2) {
     }
     if (y1 < y2) {
         for (var i = y1; i <= y2; i++) {
-            console.log(i, y2, m1, m2);
             if (i == y2) {
                 for (var j = 1; j <= m2; j++) {
                     result.push(i + "-" + j);
