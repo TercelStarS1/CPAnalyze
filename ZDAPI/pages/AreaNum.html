@@ -2,15 +2,79 @@
 <html> 
 <head>
     <title>工作平台-开发能力总览</title>
-    <link rel="import" href="TemplateHead.html"  /> 
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
+    <link rel="stylesheet" href="../Resource/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../Resource/StarResource/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../Resource/StarResource/css/ionicons.min.css">
+    <link rel="stylesheet" href="../Resource/dist/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../Resource/dist/css/skins/_all-skins.min.css">
+    <link rel="stylesheet" href="../Resource/bootstrap/css/datetimepicker.min.css">
+    <!-- table -->
+    <link type="text/css" rel="stylesheet" href="../Resource/bootstrap/table/css/jquery.dataTables.css">
+    <link type="text/css" rel="stylesheet" href="../Resource/bootstrap/table/css/dataTables.bootstrap.css">
+    <link type="text/css" rel="stylesheet" href="../Resource/bootstrap/table/css/orange-blue.css" id="theme-change" class="style-change color-change">
+
+
+    <script src="../Resource/plugins/jQuery/jquery-2.2.3.min.js"></script>
+    <script src="../Resource/plugins/jquery.cookie.js"></script>
+    <script src="../Resource/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../Resource/dist/js/app.min.js"></script>
+    <script src="../Resource/bootstrap/js/moment-with-locales.min.js"></script>
+    <script src="../Resource/bootstrap/js/datetimepicker.min.js"></script>
+
+    <script src="../Resource/bootstrap/js/utils.js"></script>
+
+    <!-- table -->
+    <script src="../Resource/bootstrap/table/js/jquery.dataTables.js"></script>
+    <script src="../Resource/bootstrap/table/js/dataTables.bootstrap.js"></script>
+
+    <!-- highchart 图表-->
+    <script src="../Resource/bootstrap/js/6.1.4highcharts.js"></script>
+    <script src="../Resource/bootstrap/js/6.1.4exporting.js"></script>
+    <script src="../Resource/bootstrap/js/6.1.4series-label.js"></script>
+    <script src="../Resource/bootstrap/js/6.1.4oldie.js"></script>
+    <script src="../Resource/bootstrap/js/highcharts-zh_CN.js"></script>
+
+    <script src="../Resource/bootstrap/js/bootstrap-paginator.js"></script>
+    <script src="../Resource/plugins/cvi_busy_lib_new.js"></script>
+    <script src="../Resource/plugins/pagefyhelper.js"></script>
+
+    <!-- 日期帮助 -->
+    <script src="../Resource/plugins/datehelper.js"></script>
+
+    <!--[if lt IE 9]>
+    <script src="../Resource/StarResource/js/html5shiv.min.js"></script>
+    <script src="../Resource/StarResource/js/respond.min.js"></script>
+    <![endif]-->
+    <style>
+        canvas {
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+        }
+
+        .chart-container {
+            width: 85%;
+            margin-left: 25px;
+        }
+
+        .container {
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+    </style>
 </head>
 
 <body class="hold-transition skin-blue sidebar-mini">
     <div class="wrapper">
-        
+
         <div class="content-wrapper" id="contentdiv">
             <section class="content-header" style="border-bottom:2px solid grey;">
-                <h1  id="showaction">地区新增客户</h1>
+                <h1 id="showaction">地区新增客户</h1>
                 <ol class="breadcrumb">
                     <li>
                         <a href="StarHome.html"><i class="fa fa-dashboard"></i> 主页</a>
@@ -33,19 +97,21 @@
                     </div>
                 </div>
             </div>
-            <section class="content" >
+            <section class="content">
                 <div id="divshow" class="col-md-12">
 
                 </div>
                 <div class="col-md-12" style="width:95%;">
                     <ul id="fyshow" style="float:right;"></ul>
-                </div>  
+                </div>
             </section>
-        </div> 
-    </div> 
-     
-    <script type="text/javascript">   
-        
+        </div>
+    </div>
+
+    <!-- 帮助类 -->
+    <script src="../FXresource/plugins/allhelper.js"></script>
+    <script type="text/javascript">
+
         var xDate = new Array();  //时间跨度
         var numName1 = numName2 = numName3 = numName4 = numName5 = "";  //前五名编号
         var showName1 = showName2 = showName3 = showName4 = showName5 = "";  //前五名名字显示
@@ -66,12 +132,12 @@
                 locale: moment.locale('zh-cn')
             });
             $("#endDate").val(GetDateYM(GetNowDate()));
-            $("#startDate").val(GetDateYM(GetDateByMonth(GetNowDate(), 4))); 
+            $("#startDate").val(GetDateYM(GetDateByMonth(GetNowDate(), 4)));
         });
-         
-          
+
+
         xDate = GetMonthArray(GetDateYM(GetDateByMonth(GetNowDate(), 4)), GetDateYM(GetNowDate()));
-        $("#selectCompany").html(localStorage.getItem('companyData')); 
+        $("#selectCompany").html(localStorage.getItem('companyData'));
         skincompany = $('#selectCompany option:selected').val();
         stime = GetDateYM(GetDateByMonth(GetNowDate(), 4));
         etime = GetDateYM(GetNowDate());
@@ -81,17 +147,17 @@
         $("#btn_search").click(function () {
             stime = $("#startDate").val();
             etime = $("#endDate").val();
-            xDate = GetMonthArray($("#startDate").val(), $("#endDate").val()); 
+            xDate = GetMonthArray($("#startDate").val(), $("#endDate").val());
             skincompany = $('#selectCompany option:selected').val();
-            GetNum5(1, pageshownum, 0, stime,etime);
+            GetNum5(1, pageshownum, 0, stime, etime);
         });
         //获取当前页展示客户编码列表
-        function GetNum5(n1, n2, n3, startDate, endDate) {   //当前页码，每页显示数量，当前显示页面 数据总量  
-            if (!xval) { 
+        function GetNum5(n1, n2, n3, startDate, endDate) {   //当前页码，每页显示数量，当前显示页面 数据总量
+            if (!xval) {
                 GetAjaxLoad("", "");
             }
             numName1 = numName2 = numName3 = numName4 = numName5 = "";  //前五名编号
-            showName1 = showName2 = showName3 = showName4 = showName5 = "";  //前五名名字显示 
+            showName1 = showName2 = showName3 = showName4 = showName5 = "";  //前五名名字显示
             wgt5 = wgt4 = wgt3 = wgt2 = wgt1 = "";
             $.ajax({
                 type: "Post",
@@ -105,19 +171,19 @@
                         if (xval) {
                             xval.remove();
                             xval = null;
-                        } 
+                        }
                         $("#divshow").html("<div class='text-center '> <h3>没有数据</h3> </div>");
                         return;
                     }
-                    var allpage = Math.ceil(n3 / pageshownum);  
-                    ShowPage("#fyshow", n1, allpage, shownowpage);   //ul ID 当前选中页码 总页数 回调函数 
+                    var allpage = Math.ceil(n3 / pageshownum);
+                    ShowPage("#fyshow", n1, allpage, shownowpage);   //ul ID 当前选中页码 总页数 回调函数
                     data = data.data;
                     if (data.length == 5) {
                         numName1 = data[0].CODE; numName2 = data[1].CODE; numName3 = data[2].CODE; numName4 = data[3].CODE; numName5 = data[4].CODE;
                         showName1 = data[0].NAME + " --新增客户(个): " + data[0].Num; showName2 = data[1].NAME + " --新增客户(个): " + data[1].Num; showName3 = data[2].NAME + " --新增客户(个): " + data[2].Num; showName4 = data[3].NAME + " --新增客户(个): " + data[3].Num; showName5 = data[4].NAME + " --新增客户(个): " + data[4].Num;
                     }
                     else if (data.length == 4) {
-                        numName1 = data[0].CODE; numName2 = data[1].CODE; numName3 = data[2].CODE; numName4 = data[3].CODE; 
+                        numName1 = data[0].CODE; numName2 = data[1].CODE; numName3 = data[2].CODE; numName4 = data[3].CODE;
                         showName1 = data[0].NAME + " --新增客户(个): " + data[0].Num; showName2 = data[1].NAME + " --新增客户(个): " + data[1].Num; showName3 = data[2].NAME + " --新增客户(个): " + data[2].Num; showName4 = data[3].NAME + " --新增客户(个): " + data[3].Num;
                     }
                     else if (data.length == 3) {
@@ -125,7 +191,7 @@
                         showName1 = data[0].NAME + " --新增客户(个): " + data[0].Num; showName2 = data[1].NAME + " --新增客户(个): " + data[1].Num; showName3 = data[2].NAME + " --新增客户(个): " + data[2].Num;
                     }
                     else if (data.length == 2) {
-                        numName1 = data[0].CODE; numName2 = data[1].CODE; 
+                        numName1 = data[0].CODE; numName2 = data[1].CODE;
                         showName1 = data[0].NAME + " --新增客户(个): " + data[0].Num; showName2 = data[1].NAME + " --新增客户(个): " + data[1].Num;
                     }
                     else if (data.length == 1) {
@@ -149,7 +215,7 @@
                 url: "/api/Sale/AreaDetailByPage",
                 data: { startDate: $("#startDate").val(), endDate: $("#endDate").val(), COMPANY: $('#selectCompany option:selected').val() },
                 dataType: "json",
-                success: function (data) { 
+                success: function (data) {
                     var ynum = data.num;
                     var data2 = data.data2;
                     data = data.data;
@@ -157,13 +223,13 @@
                     var num2 = new Array();
                     var num3 = new Array();
                     var num4 = new Array();
-                    var num5 = new Array(); 
-                    var skin = 0; //标示 
+                    var num5 = new Array();
+                    var skin = 0; //标示
                     var nnn = new Array();
-                    var name = ""; 
-                    for (var i = 0; i < data.length; i++) { 
+                    var name = "";
+                    for (var i = 0; i < data.length; i++) {
                         if (numName1 == data[i]["CODE"]) {
-                            skin++; 
+                            skin++;
                             nnn.push(data[i]["WGT"]);
                             if (data[i]["NAME"]) {
                                 name = data[i]["NAME"] + ": " + (data[i]["Num"] / 1000).toFixed(2) + "(t)";
@@ -174,8 +240,8 @@
                                     name: name,
                                     data: nnn
                                 };
-                                num1.push(abc); 
-                                nnn = new Array(); 
+                                num1.push(abc);
+                                nnn = new Array();
                             }
                         }
                         else if (numName2 == data[i]["CODE"]) {
@@ -244,10 +310,10 @@
                         }
                     }
 
-                    $("#divshow").html(""); 
+                    $("#divshow").html("");
                     for (var i = 0; i < data2.length; i++) {
                         if (numName1 == data2[i]["Salesperson"])
-                            showName1  += "-" + data2[i]["Num"];
+                            showName1 += "-" + data2[i]["Num"];
                         if (numName2 == data2[i]["Salesperson"])
                             showName2 += "-" + data2[i]["Num"];
                         if (numName3 == data2[i]["Salesperson"])
@@ -257,7 +323,7 @@
                         if (numName5 == data2[i]["Salesperson"])
                             showName5 += "-" + data2[i]["Num"];
                     }
-                     
+
                     if (numName1 != "")
                         ShowTB("container1", showName1, num1, ynum);
                     if (numName2 != "")
@@ -279,7 +345,7 @@
         }
 
         //显示当前页内容
-        function shownowpage(page) { 
+        function shownowpage(page) {
             if (skincompany != $('#selectCompany option:selected').val() || stime != $("#startDate").val() || etime != $("#endDate").val()) {
                 page = 1;
                 jgdate = DateMinus($("#startDate").val(), $("#endDate").val());
@@ -290,8 +356,8 @@
                 GetNum5(page, pageshownum, numall, stime, etime);
             }
         }
-       
-        function ShowTB(id, showname, data, maxnum) { 
+
+        function ShowTB(id, showname, data, maxnum) {
             $("#divshow").append('<div id="' + id + '" style="width:98%;height:350px"></div>');
             var chart = Highcharts.chart(id, {
                 chart: {
@@ -306,19 +372,19 @@
                         color: 'block',
                         fontSize: '14px;'
                     }
-                }, 
+                },
                 xAxis: {
                     categories: xDate,
-                    crosshair: true,  
-                    tickLength:5,
+                    crosshair: true,
+                    tickLength: 5,
                     labels: {
                         style: {
                             color: 'gray',
                             fontSize: '12px;'
-                        } 
-                    } 
+                        }
+                    }
                 },
-                yAxis: { 
+                yAxis: {
                     //max: maxnum,
                     gridLineWidth: "0",
                     title: {
@@ -331,7 +397,7 @@
                 tooltip: {
                     formatter: function () {
                         return '<b>' + this.x + '</b><br/>' +
-                            this.series.name.split(":")[0] + ': ' + (this.point.y/1000).toFixed(2) + '<br/>';
+                            this.series.name.split(":")[0] + ': ' + (this.point.y / 1000).toFixed(2) + '<br/>';
                     }
                 },
                 plotOptions: {
@@ -340,14 +406,13 @@
                     }
                 },
                 series: data
-            }); 
-            if (xval)
-            {
+            });
+            if (xval) {
                 xval.remove();
                 xval = null;
-            } 
+            }
         }
 
-     </script>
+    </script>
 </body>
 </html>

@@ -1,0 +1,22 @@
+{
+  "user": [
+    {
+      "userCode": "admin",
+      "userName": "超级管理员",
+      "userPortion": "huo",
+      "userPwd": "cp"
+    },
+    {
+      "userCode": "admin-j",
+      "userName": "超级管理员",
+      "userPortion": "jiang",
+      "userPwd": "cp"
+    },
+    {
+      "userCode": "zy",
+      "userName": "赵垠",
+      "userPortion": "huo",
+      "userPwd": "zy"
+    }
+  ]
+}

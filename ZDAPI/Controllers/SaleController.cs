@@ -38,6 +38,12 @@ namespace WebAPI.Controllers
             {
                 string startDate = "";
                 int numjg = (int)info.Num;
+                String userPortion = "";
+                if (info.Customer == null || info.Customer == "")
+                    userPortion = "huo";
+                else
+                    userPortion = info.Customer;
+
                 if (numjg == 1)
                 {
                     startDate = DateTime.Now.AddDays(-365).ToShortDateString();
@@ -49,12 +55,22 @@ namespace WebAPI.Controllers
                 
                 var sqlNum = "select COMPANY,name,Num from( select count(customer) num , company from  (select * from(select customer, company,min(doc_date) doc_date from zb_feed_sale " +
                     " where customer not like '9%' group by customer, company ) "+
-                    " ) where doc_date > to_date('" + startDate + "', 'YYYY/MM/DD')  group by company ) t1 join ZB_FEED_COMPANY t2 on(t1.company = t2.code) order by company";
+                    " ) where doc_date > to_date('" + startDate + "', 'YYYY/MM/DD')  group by company ) t1 join ZB_FEED_COMPANY t2 on(t1.company = t2.code) where t2.portion='"+ userPortion + "' order by company";
 
-                var lastNum = "select count(t1.customer) from (select * from( select customer, company,min(doc_date) doc_date from zb_feed_sale  where customer not like '9%' group by customer, company "+
-                    " ) where doc_date > to_date('"+startDate+"', 'YYYY/MM/DD')"+
-                    " )t1 join (select customer, company from(select customer, company, max(doc_date)doc_date from zb_feed_sale  where customer not like '9%' group by customer, company"+
-                    " ) where doc_date > to_date('"+ beginDate + "', 'YYYY/MM/DD')  ) t2 on(t1.customer = t2.customer and t1.company = t2.company)";
+                var lastNum = "select count(t1.customer)  " +
+                                  "from(select * " +
+                                          "from(select s1.customer customer, s1.company company, min(s1.doc_date) doc_date  " +
+                                                 " from zb_feed_sale s1, ZB_FEED_COMPANY s2  " +
+                                                " where  s1.company = s2.code and s1.customer not like '9%' and s2.portion = '"+ userPortion + "'  " +
+                                                " group by customer, company)  " +
+                                         " where doc_date > to_date('" + startDate+"', 'YYYY/MM/DD')) t1  "+
+                                  "join(select customer, company  " +
+                                          " from(select s1.customer, s1.company, max(s1.doc_date) doc_date  " +
+                                                "  from zb_feed_sale s1, ZB_FEED_COMPANY s2  " +
+                                                 " where  s1.company = s2.code and customer not like '9%' and s2.portion = '" + userPortion + "'  " +
+                                                 "group by customer, company)  " +
+                                         " where doc_date > to_date('" + beginDate + "', 'YYYY/MM/DD')) t2  "+
+                                    "on(t1.customer = t2.customer and t1.company = t2.company)";
                 var query = db.ExecuteSqlToList<ZB_FEED_CUSTOMER>(sqlNum).ToList();
                 int num = query.Sum(g => g.Num);
                 string allnum = db.ExecuteScalar(lastNum).ToString();

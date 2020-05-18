@@ -2,12 +2,76 @@
 <html>
 <head>
     <title></title>
-    <link rel="import" href="TemplateHead.html">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
+    <link rel="stylesheet" href="../Resource/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../Resource/StarResource/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../Resource/StarResource/css/ionicons.min.css">
+    <link rel="stylesheet" href="../Resource/dist/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../Resource/dist/css/skins/_all-skins.min.css">
+    <link rel="stylesheet" href="../Resource/bootstrap/css/datetimepicker.min.css">
+    <!-- table -->
+    <link type="text/css" rel="stylesheet" href="../Resource/bootstrap/table/css/jquery.dataTables.css">
+    <link type="text/css" rel="stylesheet" href="../Resource/bootstrap/table/css/dataTables.bootstrap.css">
+    <link type="text/css" rel="stylesheet" href="../Resource/bootstrap/table/css/orange-blue.css" id="theme-change" class="style-change color-change">
+
+
+    <script src="../Resource/plugins/jQuery/jquery-2.2.3.min.js"></script>
+    <script src="../Resource/plugins/jquery.cookie.js"></script>
+    <script src="../Resource/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../Resource/dist/js/app.min.js"></script>
+    <script src="../Resource/bootstrap/js/moment-with-locales.min.js"></script>
+    <script src="../Resource/bootstrap/js/datetimepicker.min.js"></script>
+
+    <script src="../Resource/bootstrap/js/utils.js"></script>
+
+    <!-- table -->
+    <script src="../Resource/bootstrap/table/js/jquery.dataTables.js"></script>
+    <script src="../Resource/bootstrap/table/js/dataTables.bootstrap.js"></script>
+
+    <!-- highchart 图表-->
+    <script src="../Resource/bootstrap/js/6.1.4highcharts.js"></script>
+    <script src="../Resource/bootstrap/js/6.1.4exporting.js"></script>
+    <script src="../Resource/bootstrap/js/6.1.4series-label.js"></script>
+    <script src="../Resource/bootstrap/js/6.1.4oldie.js"></script>
+    <script src="../Resource/bootstrap/js/highcharts-zh_CN.js"></script>
+
+    <script src="../Resource/bootstrap/js/bootstrap-paginator.js"></script>
+    <script src="../Resource/plugins/cvi_busy_lib_new.js"></script>
+    <script src="../Resource/plugins/pagefyhelper.js"></script>
+
+    <!-- 日期帮助 -->
+    <script src="../Resource/plugins/datehelper.js"></script>
+
+    <!--[if lt IE 9]>
+    <script src="../Resource/StarResource/js/html5shiv.min.js"></script>
+    <script src="../Resource/StarResource/js/respond.min.js"></script>
+    <![endif]-->
+    <style>
+        canvas {
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+        }
+
+        .chart-container {
+            width: 85%;
+            margin-left: 25px;
+        }
+
+        .container {
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+    </style>
 </head>
 
 <body class="hold-transition skin-blue sidebar-mini">
     <div class="wrapper">
-        
+
 
         <div class="content-wrapper" id="contentdiv">
             <section class="content-header" style="border-bottom:2px solid grey;">
@@ -23,7 +87,7 @@
                 <div class="row">
                     <div style="display:flex">
                         <div style="width:70px; margin-left:15px; margin-top:5px;">开始日期:</div>
-                        <input type="text" style="width:150px;" class="form-control input-small input-inline" id="startDate"> 
+                        <input type="text" style="width:150px;" class="form-control input-small input-inline" id="startDate">
                         <select id="selectCompany" style="margin-left:15px; width:240px;" class="form-control selectpicker "></select>
                         <button id="btn_search" class="btn green" style="margin-left:20px;">
                             查询 <i class="fa fa-search"></i>
@@ -40,18 +104,20 @@
                 </div>
             </section>
         </div>
-         
-    </div> 
 
+    </div>
+
+    <!-- 帮助类 -->
+    <script src="../FXresource/plugins/allhelper.js"></script>
     <script type="text/javascript">
-        
+
         //获得日期
         $(function () {
             $("#startDate").datetimepicker({
                 format: 'YYYY-MM',
                 locale: moment.locale('zh-cn')
-            }); 
-            $("#startDate").val(GetDateYM(GetDateByMonth(GetNowDate(),11)));
+            });
+            $("#startDate").val(GetDateYM(GetDateByMonth(GetNowDate(), 11)));
         });
         var xDate = new Array();  //时间跨度
         var numName1 = numName2 = numName3 = numName4 = numName5 = "";  //前五名编号
@@ -61,18 +127,18 @@
         var skincompany = "";
         var stime;
         var etime;
-        
+
 
         xDate = GetMonthArray(GetDateYM(GetDateByMonth(GetNowDate(), 11)), GetNowDate());
         $("#selectCompany").html(localStorage.getItem('companyData'));
         skincompany = $('#selectCompany option:selected').val();
-        GetNum5(1, pageshownum, 0,GetDateYM(GetDateByMonth(GetNowDate(), 11)));
-          
+        GetNum5(1, pageshownum, 0, GetDateYM(GetDateByMonth(GetNowDate(), 11)));
+
         //点击查询
-        $("#btn_search").click(function () { 
-            xDate = GetMonthArray($("#startDate").val(), GetNowDate());  
+        $("#btn_search").click(function () {
+            xDate = GetMonthArray($("#startDate").val(), GetNowDate());
             skincompany = $('#selectCompany option:selected').val();
-            stime = $("#startDate").val(); 
+            stime = $("#startDate").val();
             GetNum5(1, pageshownum, 0, stime);
         });
         //获取当前页展示客户编码列表
@@ -89,7 +155,7 @@
                 url: "/api/Sale/LostCoustomerByPageNew",
                 data: { startDate: startDate, COMPANY: $('#selectCompany option:selected').val(), PageNum: n1, ShowNum: n2 },
                 dataType: "json",
-                success: function (data) { 
+                success: function (data) {
                     n3 = data.num;
                     if (n3 == 0) {
                         if (xval) {
@@ -99,7 +165,7 @@
                         $("#divshow").html("<div class='text-center '> <h3>没有数据</h3> </div>");
                         return;
                     }
-                    var allpage = Math.ceil(n3 / pageshownum);  
+                    var allpage = Math.ceil(n3 / pageshownum);
                     ShowPage("#fyshow", n1, allpage, shownowpage);   //ul ID 当前选中页码 总页数 回调函数
                     data = data.data;
                     console.log(data);
@@ -144,7 +210,7 @@
                 url: "/api/Sale/SaleLostDetailByPageNew",
                 data: { startDate: $("#startDate").val(), endDate: $("#endDate").val(), COMPANY: $('#selectCompany option:selected').val() },
                 dataType: "json",
-                success: function (data) { 
+                success: function (data) {
                     var ynum = data.num;
                     data = data.data;
                     var num1 = new Array();
@@ -154,7 +220,7 @@
                     var num5 = new Array();
                     var skin = 0; //标示
                     var nnn = new Array();
-                    var name = ""; 
+                    var name = "";
                     for (var i = 0; i < data.length; i++) {
                         if (numName1 == data[i]["Salesperson"]) {
                             skin++;
@@ -264,7 +330,7 @@
         }
 
         //显示当前页内容
-        function shownowpage(page) {  
+        function shownowpage(page) {
             if (skincompany != $('#selectCompany option:selected').val() || stime != $("#startDate").val()) {
                 page = 1;
                 stime = $("#startDate").val();
@@ -276,7 +342,7 @@
             }
         }
 
-        function ShowTB(id, showname, data, maxnum) { 
+        function ShowTB(id, showname, data, maxnum) {
             $("#divshow").append('<div id="' + id + '" style="width:98%;height:220px"></div>');
             var chart = Highcharts.chart(id, {
                 chart: {
@@ -295,7 +361,7 @@
                 xAxis: {
                     categories: xDate,
                     crosshair: true,
-                    tickLength:5,
+                    tickLength: 5,
                     labels: {
                         style: {
                             color: 'gray',
@@ -316,7 +382,7 @@
                 tooltip: {
                     formatter: function () {
                         return '<b>' + this.x + ' 提货量</b><br/>' +
-                            this.series.name.split(":")[0] + ': ' + (this.point.y/1000).toFixed(2) + '(t)<br/>';
+                            this.series.name.split(":")[0] + ': ' + (this.point.y / 1000).toFixed(2) + '(t)<br/>';
                     }
                 },
                 plotOptions: {
@@ -326,8 +392,7 @@
                 },
                 series: data
             });
-            if (xval)
-            {
+            if (xval) {
                 xval.remove();
                 xval = null;
             }

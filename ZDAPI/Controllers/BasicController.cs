@@ -14,6 +14,8 @@ namespace ZDAPI.Controllers
         public string skin { get; set; }
         public string remark { get; set; }
         public string message { get; set; }
+        public string skin2 { get; set; }
+        
     }
     public class ResultMessage<T>: BaseMessage
     { 
@@ -74,7 +76,18 @@ namespace ZDAPI.Controllers
             message.data2 = data2;
             return Ok(message);
         }
-
+        public IHttpActionResult Succeed<T>(T data, T data2, int num, string skin, string remark,string skin2)
+        {
+            ResultMessage<T> message = new ResultMessage<T>();
+            message.code = 1;
+            message.message = "succeed";
+            message.num = num;
+            message.skin = skin;
+            message.data = data;
+            message.data2 = data2;
+            message.skin2 = skin2;
+            return Ok(message);
+        }
         public IHttpActionResult Succeed<T>(T data, int num, string skin,string remark)
         {
             ResultMessage<T> message = new ResultMessage<T>();

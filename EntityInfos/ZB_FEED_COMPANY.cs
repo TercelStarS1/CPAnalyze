@@ -21,6 +21,9 @@ namespace EntityInfos
         [SZColumn(MaxLength = 255)]
         public string PASSWORD { get; set; }
 
+        [SZColumn(MaxLength = 255)]
+        public string PORTION { get; set; }
+
     }
     /// <summary>
     /// 用户搜索模型

@@ -88,16 +88,21 @@
 	localStorage.setItem('companyData', ""); //可以查看公司信息
 	localStorage.setItem('logincode', "");
 	$.cookie('loginUser', "");
+
+	$("#txtpwd").keypress(function (e) {
+	    if (e.which == 13) {
+	        $(".login-button").click();
+	    }
+	});
 	$(".login-button").click(function () {
 	    var username = $("#txtname").val();
 	    var userpwd = $("#txtpwd").val();
-	    console.log(username, userpwd);
 	    $.ajax({
 	        type: "Post",
 	        url: "/api/Account/UserLogin",
 	        dataType: 'json',
 	        data: { CODE: username, PASSWORD: userpwd },
-	        success: function (data) { 
+            success: function (data) {  
 	            var companyData = data.data2; 
 	            if (data.num == 1) {
 	                alert("用户名或密码错误，请重新输入");
@@ -107,8 +112,34 @@
 	                removeClass(document.querySelector(".sk-rotating-plane"), "active")
 	                document.querySelector(".login").style.display = "block"
 	            }
-	            else {
-	                var dh = dh = "<section class='sidebar'> " +
+                else {
+                    var dh = "";
+                    if (username == "admin" || username=="admin-j"){
+                        dh = "<section class='sidebar'> " +
+                        "    <ul class='sidebar-menu'> " +
+                        "        <li class='treeview'> " +
+                        "            <a href='#'><i class='fa fa-database'></i> <span>基础信息</span> <span class='pull-right-container'> <i class='fa fa-angle-left pull-right'></i> </span></a>" +
+                        "            <ul class='treeview-menu'> " +
+                        "               <li> <a href='Users.html'><i class='fa fa-user'></i>用户管理</a> </li> " +
+                        "            </ul> " +
+                        "        </li> " +
+                        "        <li class='treeview'> " +
+                        "            <a href='#'><i class='fa fa-star'></i> <span>业务员/地区/客户分析</span> <span class='pull-right-container'> <i class='fa fa-angle-left pull-right'></i> </span></a>" +
+                        "            <ul class='treeview-menu'> " +
+                        "                <li> <a href='Start.html'><i class='fa fa-circle-o'></i>新增客户一览</a> </li> " +
+                        "                <li> <a href='StarHome.html'><i class='fa fa-circle-o'></i>业务员新增客户</a> </li> " +
+                        "                <li ><a href='CustomerLostNew.html'><i class='fa fa-circle-o'></i>业务员客户流失</a></li> " +
+                        "                <li> <a href='AreaNum.html'><i class='fa fa-circle-o'></i>地区新增客户</a> </li> " +
+                        "                <li> <a href='AreaLost.html'><i class='fa fa-circle-o'></i>地区客户流失</a> </li> " +
+                        "                <li > <a href='CustomerTH.html'><i class='fa fa-circle-o'></i>客户提货量</a> </li> " +
+                        "                <li> <a href='CustomerTHCY.html'><i class='fa fa-circle-o'></i>客户提货变化</a> </li>  " +
+                        "            </ul> " +
+                        "        </li> " +
+                        "    </ul> " +
+                        "</section>";
+                    }
+                    else {
+						dh = "<section class='sidebar'> " +
                         "    <ul class='sidebar-menu'> " +
                         "        <li class='treeview'> " +
                         "            <a href='#'><i class='fa fa-star'></i> <span>业务员/地区/客户分析</span> <span class='pull-right-container'> <i class='fa fa-angle-left pull-right'></i> </span></a>" +
@@ -124,12 +155,15 @@
                         "        </li> " +
                         "    </ul> " +
                         "</section>";
+                    }                
 	                
 	                var changepwd = "<div class='modal fade' id='changePWD' tabindex='-1' role='dialog' aria-labelledby='myModalLabel' aria-hidden='true'><div class='modal-dialog' style='margin-top:120px;'><div class='modal-content'><div class='modal-header'> <button type='button' class='close' data-dismiss='modal' aria-hidden='true'> &times; </button><h4 class='modal-title' id='myModalLabel'> 修改密码  </h4> </div><div class='modal-body' style='width:80%; margin-left:20px;'><div style='height:45px;'><label class='col-sm-3'>旧密码 <span class='require'>*</span></label><div class='col-sm-9'><div class='input-group'><span class='input-group-addon'><i class='fa fa-key'></i></span><input type='text' id='oldpwd' class='form-control' /></div> </div></div><div style='height:45px;'><label class='col-sm-3'>新密码 <span class='require'>*</span></label><div class='col-sm-9'><div class='input-group'><span class='input-group-addon'><i class='fa fa-key'></i></span><input type='text' id='newpwd' class='form-control' /></div> </div></div><div style='height:45px;'><label class='col-sm-3'>确认密码 <span class='require'>*</span></label><div class='col-sm-9'><div class='input-group'><span class='input-group-addon'><i class='fa fa-key'></i></span><input type='text' id='newpwdc' class='form-control' /></div> </div></div></div><div class='modal-footer'><button type='button' class='btn btn-default' data-dismiss='modal'> 关闭 </button><button type='button' id='btnChangePwd' class='btn btn-primary'> 提交更改 </button></div></div> </div></div>";
 	                localStorage.setItem('dhcontent', dh);
 	                localStorage.setItem('changepwd', changepwd);
 	                localStorage.setItem('loginUser', data.skin);
-	                localStorage.setItem('logincode', username);
+                    localStorage.setItem('logincode', username); 
+                    localStorage.setItem('userPortion', data.skin2);
+					
 	                $.cookie('loginUser', data.skin);
 	                var company = ""; 
 	                for (var i = 0; i < companyData.length; i++) {
@@ -147,7 +181,7 @@
 	function timedCount() {
 	    addClass(document.querySelector(".sk-rotating-plane"), "active");
 	    document.querySelector(".login").style.display = "none";
-	    jsqdl = setTimeout("timedCount()", 5000);
+	    jsqdl = setTimeout("timedCount()", 500);
 	} 
     </script>
 </body>

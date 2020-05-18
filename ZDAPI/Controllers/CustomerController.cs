@@ -29,7 +29,7 @@ namespace WebAPI.Controllers
             {
                 //获取公司列表
                 //var sqlNum = "select * from ZB_FEED_COMPANY where code in(select distinct company from zb_feed_sale t)"; 
-                var sqlNum = "select * from ZB_FEED_COMPANY ";
+                var sqlNum = "select * from ZB_FEED_COMPANY t where t.portion='huo'";
                 var query = db.ExecuteSqlToList<ZB_FEED_COMPANY>(sqlNum);
                 //return query.ToList();
                 return Succeed(query.ToList());
@@ -44,7 +44,7 @@ namespace WebAPI.Controllers
             {
                 //获取公司列表
                 //var sqlNum = "select * from ZB_FEED_COMPANY where code in(select distinct company from zb_feed_sale t)";
-                var sqlNum = "select * from ZB_FEED_COMPANY ";
+                var sqlNum = "select * from ZB_FEED_COMPANY t where t.portion='huo' ";
                 var query = db.ExecuteSqlToList<ZB_FEED_COMPANY>(sqlNum);
                 return Succeed(query.ToList());
             }

@@ -58,3 +58,16 @@ E:\Work\ZD\ZDFXYM\SZORM-master\bin\Debug\System.Xml.Linq.dll
 E:\Work\ZD\ZDFXYM\SZORM-master\obj\Debug\SZORM_4.5.csprojResolveAssemblyReference.cache
 E:\Work\ZD\ZDFXYM\SZORM-master\obj\Debug\SZORM.dll
 E:\Work\ZD\ZDFXYM\SZORM-master\obj\Debug\SZORM.pdb
+E:\Work\CPYC\ZDFXYM\SZORM-master\bin\Debug\SZORM.dll
+E:\Work\CPYC\ZDFXYM\SZORM-master\bin\Debug\SZORM.pdb
+E:\Work\CPYC\ZDFXYM\SZORM-master\bin\Debug\Microsoft.CSharp.dll
+E:\Work\CPYC\ZDFXYM\SZORM-master\bin\Debug\System.Configuration.dll
+E:\Work\CPYC\ZDFXYM\SZORM-master\bin\Debug\System.Data.DataSetExtensions.dll
+E:\Work\CPYC\ZDFXYM\SZORM-master\bin\Debug\System.Data.dll
+E:\Work\CPYC\ZDFXYM\SZORM-master\bin\Debug\System.dll
+E:\Work\CPYC\ZDFXYM\SZORM-master\bin\Debug\System.Xml.dll
+E:\Work\CPYC\ZDFXYM\SZORM-master\bin\Debug\System.Xml.Linq.dll
+E:\Work\CPYC\ZDFXYM\SZORM-master\obj\Debug\SZORM.dll
+E:\Work\CPYC\ZDFXYM\SZORM-master\obj\Debug\SZORM.pdb
+E:\Work\CPYC\ZDFXYM\SZORM-master\obj\Debug\SZORM_4.5.csprojAssemblyReference.cache
+E:\Work\CPYC\ZDFXYM\SZORM-master\obj\Debug\SZORM_4.5.csproj.CopyComplete

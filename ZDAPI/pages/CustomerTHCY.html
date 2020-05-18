@@ -2,13 +2,77 @@
 <html> 
 <head>
     <title></title>
-    <link rel="import" href="TemplateHead.html">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
+    <link rel="stylesheet" href="../Resource/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../Resource/StarResource/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../Resource/StarResource/css/ionicons.min.css">
+    <link rel="stylesheet" href="../Resource/dist/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../Resource/dist/css/skins/_all-skins.min.css">
+    <link rel="stylesheet" href="../Resource/bootstrap/css/datetimepicker.min.css">
+    <!-- table -->
+    <link type="text/css" rel="stylesheet" href="../Resource/bootstrap/table/css/jquery.dataTables.css">
+    <link type="text/css" rel="stylesheet" href="../Resource/bootstrap/table/css/dataTables.bootstrap.css">
+    <link type="text/css" rel="stylesheet" href="../Resource/bootstrap/table/css/orange-blue.css" id="theme-change" class="style-change color-change">
+
+
+    <script src="../Resource/plugins/jQuery/jquery-2.2.3.min.js"></script>
+    <script src="../Resource/plugins/jquery.cookie.js"></script>
+    <script src="../Resource/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../Resource/dist/js/app.min.js"></script>
+    <script src="../Resource/bootstrap/js/moment-with-locales.min.js"></script>
+    <script src="../Resource/bootstrap/js/datetimepicker.min.js"></script>
+
+    <script src="../Resource/bootstrap/js/utils.js"></script>
+
+    <!-- table -->
+    <script src="../Resource/bootstrap/table/js/jquery.dataTables.js"></script>
+    <script src="../Resource/bootstrap/table/js/dataTables.bootstrap.js"></script>
+
+    <!-- highchart 图表-->
+    <script src="../Resource/bootstrap/js/6.1.4highcharts.js"></script>
+    <script src="../Resource/bootstrap/js/6.1.4exporting.js"></script>
+    <script src="../Resource/bootstrap/js/6.1.4series-label.js"></script>
+    <script src="../Resource/bootstrap/js/6.1.4oldie.js"></script>
+    <script src="../Resource/bootstrap/js/highcharts-zh_CN.js"></script>
+
+    <script src="../Resource/bootstrap/js/bootstrap-paginator.js"></script>
+    <script src="../Resource/plugins/cvi_busy_lib_new.js"></script>
+    <script src="../Resource/plugins/pagefyhelper.js"></script>
+
+    <!-- 日期帮助 -->
+    <script src="../Resource/plugins/datehelper.js"></script>
+
+    <!--[if lt IE 9]>
+    <script src="../Resource/StarResource/js/html5shiv.min.js"></script>
+    <script src="../Resource/StarResource/js/respond.min.js"></script>
+    <![endif]-->
+    <style>
+        canvas {
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+        }
+
+        .chart-container {
+            width: 85%;
+            margin-left: 25px;
+        }
+
+        .container {
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+    </style>
 </head>
 
 <body class="hold-transition skin-blue sidebar-mini">
-    <div class="wrapper"> 
+    <div class="wrapper">
 
-        <div class="content-wrapper"  id="contentdiv">
+        <div class="content-wrapper" id="contentdiv">
             <section class="content-header" style="border-bottom:2px solid grey;">
                 <h1 id="showaction">客户提货变化</h1>
                 <ol class="breadcrumb">
@@ -24,48 +88,50 @@
                         <div style="width:70px; margin-left:15px; margin-top:5px;">开始日期:</div>
                         <input type="text" style="width:150px;" class="form-control input-small input-inline" id="startDate">
                         <div style="width:70px; margin-left:15px; margin-top:5px;">结束日期:</div>
-                        <input type="text"  style="width:150px;" class="form-control input-small input-inline" id="endDate">
-                        <select id="selectCompany" style="margin-left:15px; width:260px;" class="form-control selectpicker ">  
-                        </select> 
+                        <input type="text" style="width:150px;" class="form-control input-small input-inline" id="endDate">
+                        <select id="selectCompany" style="margin-left:15px; width:260px;" class="form-control selectpicker ">
+                        </select>
                         <button id="showsort" class="btn green" style="margin-left:20px;" title="按提货下降量排序">
-                            <i class="fa fa-long-arrow-down" ></i>
+                            <i class="fa fa-long-arrow-down"></i>
                         </button>
 
                         <button id="btn_search" class="btn green" style="margin-left:20px;">
                             查询 <i class="fa fa-search"></i>
                         </button>
-                    </div>  
+                    </div>
                 </div>
             </div>
             <section class="content">
                 <div class="row">
                     <div id="divshow" class="col-md-12">
-                        
+
                     </div>
-                    <div  class="col-md-12" style="width:95%;">
+                    <div class="col-md-12" style="width:95%;">
                         <ul id="fyshow" style="float:right;"></ul>
-                    </div>  
+                    </div>
                 </div>
             </section>
         </div>
-         
-    </div> 
-    
-    <script type="text/javascript"> 
-         
-        //日期控件  默认三个月 
+
+    </div>
+
+    <!-- 帮助类 -->
+    <script src="../FXresource/plugins/allhelper.js"></script>
+    <script type="text/javascript">
+
+        //日期控件  默认三个月
         $(function () {
             $("#startDate").datetimepicker({
                 format: 'YYYY-MM-DD',
-                locale: moment.locale('zh-cn') 
+                locale: moment.locale('zh-cn')
             });
-            
+
             $("#endDate").datetimepicker({
                 format: 'YYYY-MM-DD',
                 locale: moment.locale('zh-cn')
-            }); 
+            });
             $("#endDate").val(GetNowDate());
-            $("#startDate").val(GetDateByMonth(GetNowDate(), 3)); 
+            $("#startDate").val(GetDateByMonth(GetNowDate(), 3));
         });
         var numName1 = numName2 = numName3 = numName4 = numName5 = "";   //客户编码
         var showName1 = showName2 = showName3 = showName4 = showName5 = "";  //显示客户名称
@@ -73,7 +139,7 @@
         var wgt5 = wgt4 = wgt3 = wgt2 = wgt1 = "";   //显示提货量
         var pageshownum = 4;  //每页展示数据量
         var numall = 0;   //总数据量
-        var skincompany = "";  
+        var skincompany = "";
         var sort = "desc";
         var jgdate = "1";
         var stime;
@@ -81,12 +147,11 @@
         //查询
         $("#btn_search").click(function () {
             jgdate = DateMinus($("#startDate").val(), $("#endDate").val());
-            if (jgdate < 6)
-            {
+            if (jgdate < 6) {
                 alert("时间间隔必须大于1周");
                 return;
-            } 
-            if (DateMinus($("#endDate").val(), GetNowDate())<0) {
+            }
+            if (DateMinus($("#endDate").val(), GetNowDate()) < 0) {
                 alert("结束日期必须小于等于当前日期");
                 return;
             }
@@ -125,22 +190,22 @@
             if (jgdate < 1) {
                 alert("开始日期必须小于结束日期");
                 return;
-            } 
+            }
             stime = $("#startDate").val();
             etime = $("#endDate").val();
             GetNum5(1, pageshownum, 0, stime, etime);
-        }); 
-  
+        });
+
         jgdate = DateMinus(GetDateByMonth(GetNowDate(), 3), GetNowDate());
         $("#selectCompany").html(localStorage.getItem('companyData'));
-        skincompany = $('#selectCompany option:selected').val(); 
+        skincompany = $('#selectCompany option:selected').val();
         stime = GetDateByMonth(GetNowDate(), 3);
         etime = GetNowDate();
         GetNum5(1, pageshownum, 0, stime, etime);
 
 
         //获取当前页展示客户编码列表
-        function GetNum5(n1, n2, n3, startDate, endDate) {   //当前页码，每页显示数量，当前显示页面 数据总量  
+        function GetNum5(n1, n2, n3, startDate, endDate) {   //当前页码，每页显示数量，当前显示页面 数据总量
             numName1 = numName2 = numName3 = numName4 = numName5 = "";
             showName1 = showName2 = showName3 = showName4 = showName5 = "";
             salesname1 = salesname2 = salesname3 = salesname4 = salesname5 = "";
@@ -164,8 +229,8 @@
                         return;
                     }
                     var allpage = Math.ceil(n3 / pageshownum);
-                    ShowPage("#fyshow", n1, allpage, shownowpage);   //ul ID 当前选中页码 总页数 回调函数 
-                    data = data.data; 
+                    ShowPage("#fyshow", n1, allpage, shownowpage);   //ul ID 当前选中页码 总页数 回调函数
+                    data = data.data;
                     if (data.length == 5) {
                         numName5 = data[0]["CUSTOMER"]; numName4 = data[1]["CUSTOMER"]; numName3 = data[2]["CUSTOMER"]; numName2 = data[3]["CUSTOMER"]; numName1 = data[4]["CUSTOMER"];
                         wgt5 = data[0]["WGT"]; wgt4 = data[1]["WGT"]; wgt3 = data[2]["WGT"]; wgt2 = data[3]["WGT"]; wgt1 = data[4]["WGT"];
@@ -179,19 +244,19 @@
                     if (data.length == 3) {
                         numName3 = data[0]["CUSTOMER"]; numName2 = data[1]["CUSTOMER"]; numName1 = data[2]["CUSTOMER"];
                         wgt3 = data[0]["WGT"]; wgt2 = data[1]["WGT"]; wgt1 = data[2]["WGT"];
-                         salesname3 = data[0]["SalesName"]; salesname2 = data[1]["SalesName"]; salesname1 = data[2]["SalesName"];
+                        salesname3 = data[0]["SalesName"]; salesname2 = data[1]["SalesName"]; salesname1 = data[2]["SalesName"];
                     }
                     if (data.length == 2) {
                         numName2 = data[0]["CUSTOMER"]; numName1 = data[1]["CUSTOMER"];
                         wgt2 = data[0]["WGT"]; wgt1 = data[1]["WGT"];
-                       salesname2 = data[0]["SalesName"]; salesname1 = data[1]["SalesName"];
+                        salesname2 = data[0]["SalesName"]; salesname1 = data[1]["SalesName"];
 
                     } if (data.length == 1) {
                         numName1 = data[0]["CUSTOMER"];
                         wgt1 = data[0]["WGT"]; salesname1 = data[0]["SalesName"];
                     }
-                    GetTB(); 
-                    
+                    GetTB();
+
                 }
                 ,
                 error: function () {
@@ -201,7 +266,7 @@
                     }
                 }
             })
-        } 
+        }
         //展示图表
         function GetTB() {
             $.ajax({
@@ -209,22 +274,22 @@
                 url: "/api/Customer/CustomerListZeroCY",
                 data: { startDate: $("#startDate").val(), endDate: $("#endDate").val(), CUSTOMERValue: $('#selectCompany option:selected').val() },
                 dataType: "json",
-                success: function (data) { 
-                    var maxnum = data.num; 
-                    data = data.data; 
+                success: function (data) {
+                    var maxnum = data.num;
+                    data = data.data;
                     var num1 = new Array();
                     var num2 = new Array();
                     var num3 = new Array();
                     var num4 = new Array();
-                    var num5 = new Array(); 
+                    var num5 = new Array();
                     for (var i = 0; i < data.length; i++) {
-                       if (numName1 == data[i]["CUSTOMER"]) {
-                           if (data[i]["CUSTOMERName"]) {
-                               showName1 = data[i]["CUSTOMERName"];
-                           }
+                        if (numName1 == data[i]["CUSTOMER"]) {
+                            if (data[i]["CUSTOMERName"]) {
+                                showName1 = data[i]["CUSTOMERName"];
+                            }
                             var num11 = new Array();
                             num11[0] = formatDate2(data[i]["DOC_DATE"]);
-                            num11[1] = data[i]["WGT"]; 
+                            num11[1] = data[i]["WGT"];
                             num1.push(num11);
                         }
                         else if (numName2 == data[i]["CUSTOMER"]) {
@@ -254,7 +319,7 @@
                             num11[1] = data[i]["WGT"];
                             num4.push(num11);
                         }
-                        else if (numName5 == data[i]["CUSTOMER"]) { 
+                        else if (numName5 == data[i]["CUSTOMER"]) {
                             if (data[i]["CUSTOMERName"]) {
                                 showName5 = data[i]["CUSTOMERName"];
                             }
@@ -280,7 +345,7 @@
                         ShowTB("container2", showName2, num2, '#f7a35c', wgt2, maxnum, salesname2);//84331f
                     if (showName1 != "")
                         ShowTB("container1", showName1, num1, '#e4d354', wgt1, maxnum, salesname1);//008792
-                    
+
                 }
                 ,
                 error: function () {
@@ -296,7 +361,7 @@
             var daynum = DateMinus($("#startDate").val(), $("#endDate").val()) / 8;
             if (!salesname) {
                 salesname = "未找到关联业务员";
-            } 
+            }
             $("#divshow").append('<div id="' + id + '" style="width:98%;height:180px"></div>');
             var chart = Highcharts.chart(id, {
                 chart: { type: 'column' },
@@ -314,15 +379,15 @@
                     text: '最后一次提货关联业务员：' + salesname
                 },
                 xAxis: {
-                    type: 'category', 
+                    type: 'category',
                     tickInterval: parseInt(daynum),
-                    tickLength:5,
+                    tickLength: 5,
                     labels: {
                         style: {
                             color: 'gray',
                             fontSize: '12px;'
-                        } 
-                    } 
+                        }
+                    }
                 },
                 yAxis: {
                     min: 0,
@@ -356,9 +421,9 @@
                 }]
             });
         }
-    
+
         //显示当前页内容
-        function shownowpage(page) { 
+        function shownowpage(page) {
             if (skincompany != $('#selectCompany option:selected').val() || stime != $("#startDate").val() || etime != $("#endDate").val()) {
                 page = 1;
                 jgdate = DateMinus($("#startDate").val(), $("#endDate").val());

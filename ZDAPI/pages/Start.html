@@ -2,11 +2,76 @@
 <html> 
 <head>
     <title></title>
-    <link rel="import" href="TemplateHead.html" >
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
+    <link rel="stylesheet" href="../Resource/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../Resource/StarResource/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../Resource/StarResource/css/ionicons.min.css">
+    <link rel="stylesheet" href="../Resource/dist/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../Resource/dist/css/skins/_all-skins.min.css">
+    <link rel="stylesheet" href="../Resource/bootstrap/css/datetimepicker.min.css">
+    <!-- table -->
+    <link type="text/css" rel="stylesheet" href="../Resource/bootstrap/table/css/jquery.dataTables.css">
+    <link type="text/css" rel="stylesheet" href="../Resource/bootstrap/table/css/dataTables.bootstrap.css">
+    <link type="text/css" rel="stylesheet" href="../Resource/bootstrap/table/css/orange-blue.css" id="theme-change" class="style-change color-change">
+
+
+    <script src="../Resource/plugins/jQuery/jquery-2.2.3.min.js"></script>
+    <script src="../Resource/plugins/jquery.cookie.js"></script>
+    <script src="../Resource/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../Resource/dist/js/app.min.js"></script>
+    <script src="../Resource/bootstrap/js/moment-with-locales.min.js"></script>
+    <script src="../Resource/bootstrap/js/datetimepicker.min.js"></script>
+
+    <script src="../Resource/bootstrap/js/utils.js"></script>
+
+    <!-- table -->
+    <script src="../Resource/bootstrap/table/js/jquery.dataTables.js"></script>
+    <script src="../Resource/bootstrap/table/js/dataTables.bootstrap.js"></script>
+
+    <!-- highchart 图表-->
+    <script src="../Resource/bootstrap/js/6.1.4highcharts.js"></script>
+    <script src="../Resource/bootstrap/js/6.1.4exporting.js"></script>
+    <script src="../Resource/bootstrap/js/6.1.4series-label.js"></script>
+    <script src="../Resource/bootstrap/js/6.1.4oldie.js"></script>
+    <script src="../Resource/bootstrap/js/highcharts-zh_CN.js"></script>
+
+    <script src="../Resource/bootstrap/js/bootstrap-paginator.js"></script>
+    <script src="../Resource/plugins/cvi_busy_lib_new.js"></script>
+    <script src="../Resource/plugins/pagefyhelper.js"></script>
+
+    <!-- 日期帮助 -->
+    <script src="../Resource/plugins/datehelper.js"></script>
+    <!-- 帮助类 -->
+
+    <!--[if lt IE 9]>
+    <script src="../Resource/StarResource/js/html5shiv.min.js"></script>
+    <script src="../Resource/StarResource/js/respond.min.js"></script>
+    <![endif]-->
+    <style>
+        canvas {
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+        }
+
+        .chart-container {
+            width: 85%;
+            margin-left: 25px;
+        }
+
+        .container {
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+    </style>
 </head>
 
 <body class="hold-transition skin-blue sidebar-mini">
-    <div class="wrapper">  
+    <div class="wrapper">
         <div class="content-wrapper" id="contentdiv">
             <section class="content-header" style="border-bottom:2px solid grey;">
                 <h1 id="showaction">新增客户一览</h1>
@@ -22,24 +87,24 @@
                 <div class="row" style="padding-left:10px;">
                     <div style="display:flex">
                         <select style="margin-left:15px; width:180px;" id="selectDate" class="form-control selectpicker ">
-                            <option value ="3">三个月</option>
-                            <option value ="6">六个月</option>
-                            <option value ="9">九个月</option>
-                            <option value ="1">一年</option>
+                            <option value="3">三个月</option>
+                            <option value="6">六个月</option>
+                            <option value="9">九个月</option>
+                            <option value="1">一年</option>
                         </select>
                         <button id="btn_search" class="btn green" style="margin-left:20px;">
                             查询 <i class="fa fa-search"></i>
-                        </button> 
+                        </button>
                     </div>
                 </div>
             </div>
-            <section class="content" > 
+            <section class="content">
                 <div class="row">
-                    <div class="text-center col-md-12"  style="background-color:white; padding-top:6px;padding-bottom:6px;">
-                        <h4 id="titleh"></h4> 
+                    <div class="text-center col-md-12" style="background-color:white; padding-top:6px;padding-bottom:6px;">
+                        <h4 id="titleh"></h4>
                         <p id="titlep"> </p>
                     </div>
-                </div>  
+                </div>
                 <div class="divider"> </div>
                 <div style="display:flex;">
                     <div class="col-md-6" style="height:600px" id="divshow1">
@@ -48,33 +113,34 @@
                     </div>
                 </div>
             </section>
-        </div> 
-    </div>    
+        </div>
+    </div>
+
+    <script src="../FXresource/plugins/allhelper.js"></script>
     <script type="text/javascript">
-          
+
         if (!xval) {
             GetAjaxLoad("", "");
-        } 
+        }
         $("#btn_search").click(function () {
             if (!xval) {
                 GetAjaxLoad("", "");
             }
-            GetData($('#selectDate option:selected').val()); 
+            GetData($('#selectDate option:selected').val());
         });
         GetData(3);
         //获取公司列表
-        function GetData(num)
-        {
+        function GetData(num) {
             $.ajax({
                 type: "Post",
                 url: "/api/Sale/CustomerNewAll",
                 dataType: 'json',
-                data: { Num: num },
+                data: { Num: num,Customer:localStorage.getItem('userPortion')},
                 success: function (data) {
                     var num = data.num;
-                    var lastNum = data.skin; 
-                    var soursedate = new Array();   
-                    var sourseZdate = new Array();  
+                    var lastNum = data.skin;
+                    var soursedate = new Array();
+                    var sourseZdate = new Array();
                     data = data.data;
                     for (var i = 0; i < data.length; i++) {
                         var a1 = {
@@ -104,15 +170,15 @@
                 }
             });
         }
-              
+
         function descend(x, y) {
             var t1 = x.y * 1;
             var t2 = y.y * 1;
             if (t1 > t2) return -1;
             else if (t1 < t2) return 1;
-            else return 0; 
+            else return 0;
         }
-        function ShowTB(id, data, name, num) { 
+        function ShowTB(id, data, name, num) {
             Highcharts.chart(id, {
                 chart: {
                     plotBackgroundColor: null,
@@ -125,12 +191,12 @@
                     style: {
                         display: 'none'
                     }
-                }, 
+                },
                 //subtitle: {
                 //    text: '' + num
                 //},
                 exporting: {
-                    enabled: false  
+                    enabled: false
                 },
                 tooltip: {
                     pointFormat: '{series.name}: <b>{point.y}</b>'
@@ -147,7 +213,7 @@
                             }
                         },
                         events: {
-                            click: function (e) {console.log(e.point.code);}    
+                            click: function (e) { console.log(e.point.code); }
                         }
                     }
                 },
@@ -156,7 +222,7 @@
                     colorByPoint: true,
                     data: data
                 }]
-            }); 
+            });
         }
 
         function ShowZ(data) {
@@ -179,7 +245,7 @@
                         formatter: function () {
                             return this.value.substring(0, 4);
                         }
-                    } 
+                    }
                 },
                 yAxis: {
                     min: 0,
@@ -201,12 +267,12 @@
                         rotation: -90,
                         color: '#FFFFFF',
                         align: 'right',
-                        format: '{point.y}', 
+                        format: '{point.y}',
                         y: 10
                     }
                 }]
             });
         }
-     </script>
+    </script>
 </body>
 </html>

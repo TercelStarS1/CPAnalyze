@@ -9,6 +9,11 @@ using System;
 using ZDAPI.Controllers;
 using System.Web.Configuration;
 using System.Configuration;
+using System.Web;
+using System.IO;
+using Newtonsoft.Json;
+using System.Text;
+using Newtonsoft.Json.Linq;
 
 namespace WebAPI.Controllers
 {
@@ -46,30 +51,33 @@ namespace WebAPI.Controllers
             { 
                 string userName = info.CODE.Trim();
                 string _password = info.PASSWORD;// MD51.StrMD5(passwordStr + info.PASSWORD); 
-                if (userName == "admin")
-                {
-                    string pwd = GetWebConfigValueByKey("admin");
-                    if (pwd == _password)
-                    {
-                        var query = db.ZB_FEED_COMPANY.AsQuery().OrderBy(w => w.CODE).ToList();
-                        return Succeed(query, query, 0, "超级管理员", "0");
-                    }
-                    else {
-                        return Succeed("拒绝访问", 1, "", "");
-                    } 
-                }
                
                 var user = db.ZB_FEED_COMPANY.AsQuery().Where(w => w.CODE == userName && w.PASSWORD == _password).ToList();
 
                 if (user.Count == 1)
-                {
-                    // var query = db.ZB_FEED_COMPANY.AsQuery().Where(r=>r.CODE== user[0].CODE);
-                    return Succeed(user, user, 0, user[0].NAME, user[0].CODE);
+                { 
+                    return Succeed(user, user, 0, user[0].NAME, user[0].CODE,user[0].PORTION);
                 }
                 else
                 {
+                    string path = HttpContext.Current.Server.MapPath("~/user.json");
+                    using (StreamReader r = new StreamReader(path, Encoding.Default))
+                    {
+                        string json = r.ReadToEnd();
+                        dynamic array = JsonConvert.DeserializeObject(json);
+                        foreach (var item in array.user)
+                        {
+                            if (item.userCode == userName && item.userPwd == _password)
+                            {
+                                string portion = item.userPortion;
+                                var query = db.ZB_FEED_COMPANY.AsQuery().Where(w=> w.PORTION == portion).OrderBy(w => w.CODE).ToList();
+                                return Succeed(query, query, 0, (string)item.userName, (string)item.userCode, (string)portion);
+                            }
+                        }
+                    }
                     return Succeed("拒绝访问", 1, "", "");
                 } 
+
             }
         }
 
@@ -86,39 +94,43 @@ namespace WebAPI.Controllers
                 string code = info.CODE;
                 string oldpwd = info.SCHEMA;
                 string _password = info.PASSWORD;// MD51.StrMD5(passwordStr + info.PASSWORD); 
-                if (code == "admin" && GetWebConfigValueByKey("admin")==oldpwd)
-                { 
 
-                    Configuration config = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration(System.Web.HttpContext.Current.Request.ApplicationPath);
-                    AppSettingsSection appSection = (AppSettingsSection)config.GetSection("appSettings");
-
-
-                    appSection.Settings.Remove("admin");
-                    appSection.Settings.Add("admin", _password);
-                    config.Save();
-
+                var sqlNum = "update ZB_FEED_COMPANY set password='" + _password + "' where code='" + code + "' and password='" + oldpwd + "'";
+                int allnum = db.ExecuteNoQuery(sqlNum);
+                db.Save();
+                if (allnum == 1)
+                {
                     return Succeed("修改成功", 0, "");
                 }
                 else
-                { 
-                    var sqlNum = "update ZB_FEED_COMPANY set password='" + _password + "' where code='" + code + "' and password='"+ oldpwd + "'"; 
-                    int allnum = db.ExecuteNoQuery(sqlNum);
-                    db.Save();
-                    if (allnum == 1)
-                    { 
+                {
+                    string path = HttpContext.Current.Server.MapPath("~/user.json");
+                    string jsonStr = File.ReadAllText(path, Encoding.Default);
+                    JObject jo = JObject.Parse(jsonStr);   //解析Json
+                    bool skin = false;
+                    for (int i = 0; i < jo["user"].Count(); i++)
+                    {
+                        if ((string)jo["user"][i]["userCode"] == code && (string)jo["user"][i]["userPwd"] == oldpwd)
+                        {
+                            jo["user"][i]["userPwd"] = _password;
+                            skin = true;
+                            break;
+                        }
+                    }
+                    if (skin)
+                    {
+                        string convertString = Convert.ToString(jo);
+                        File.WriteAllText(path, convertString, Encoding.Default);   //将转换后的文件写入
                         return Succeed("修改成功", 0, "");
                     }
                     else
                     {
-                        return Succeed("修改失败", 1, "","旧密码错误");
-                    }
+                        return Succeed("修改失败", 1, "", "旧密码错误");
+                    } 
                 }
             }
         }
-
-
-
-
+        
         /// <summary>
         /// 用户登录成功并返回所有可以看到的菜单
         /// </summary>
@@ -172,6 +184,68 @@ namespace WebAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// 添加用户
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public IHttpActionResult UserSave(StarClassHelp info)
+        {
+            string path = HttpContext.Current.Server.MapPath("~/user.json");
+            string jsonStr = File.ReadAllText(path, Encoding.Default);
+            JObject jo = JObject.Parse(jsonStr);   //解析Json
+            bool skin = false;
+            for (int i = 0; i < jo["user"].Count(); i++)
+            {
+                if ((string)jo["user"][i]["userCode"] == info.CODE)
+                {
+                    skin = true;
+                    break;
+                }
+            }
+            if (skin)
+            {
+                return Succeed("账号已经存在", 1, "");
+            }
+            else
+            {
+                jo["user"][0].AddAfterSelf(JObject.Parse("{\"userCode\":\"" + info.CODE + "\",\"userName\":\"" + info.NAME + "\",\"userPortion\":\"" + info.PORTION + "\",\"userPwd\":\"" + info.CODE + "\"}"));
+
+                string convertString = Convert.ToString(jo);
+                File.WriteAllText(path, convertString, Encoding.Default);   //将转换后的文件写入
+                return Succeed("添加成功", 0, "");
+            }
+
+        }
+
+
+        /// <summary>
+        /// 返回所有用户列表
+        /// </summary>
+        /// <param name="info"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public IHttpActionResult UserListFx(StarClassHelp info)
+        {
+            string path = HttpContext.Current.Server.MapPath("~/user.json");
+            using (StreamReader r = new StreamReader(path, Encoding.Default))
+            {
+                string json = r.ReadToEnd();
+                dynamic array = JsonConvert.DeserializeObject(json);
+
+                List<StarClassHelp> starhelp = new List<StarClassHelp>();
+                foreach (var item in array.user)
+                {
+                    if (info.PORTION == (string)item.userPortion) {
+                        StarClassHelp star = new StarClassHelp();
+                        star.CODE = item.userCode;
+                        star.NAME = item.userName;
+                        starhelp.Add(star);
+                    }
+                }
+                return Succeed(starhelp);
+            }
+        }
 
         /// <summary>
         /// 返回所有用户列表
@@ -216,6 +290,33 @@ namespace WebAPI.Controllers
             }
         }
 
+
+        [HttpPost]
+        public IHttpActionResult UserPwdFx(StarClassHelp info)
+        {
+            string path = HttpContext.Current.Server.MapPath("~/user.json");
+            string jsonStr = File.ReadAllText(path, Encoding.Default);
+            JObject jo = JObject.Parse(jsonStr);   //解析Json
+            bool skin = false;
+            for (int i = 0; i < jo["user"].Count(); i++)
+            {
+                if ((string)jo["user"][i]["userCode"] == info.CODE)
+                {
+                    jo["user"][i]["userPwd"] = info.CODE;
+                    skin = true;
+                    break;
+                }
+            }
+            if (skin)
+            {
+                string convertString = Convert.ToString(jo);
+                File.WriteAllText(path, convertString, Encoding.Default);   //将转换后的文件写入
+                return Succeed("修改成功", 0, "");
+            }
+            else
+                return Succeed("修改失败", 1, "");
+        }
+
         /// <summary>
         /// 用户密码重置
         /// </summary>
@@ -248,6 +349,18 @@ namespace WebAPI.Controllers
                 return Succeed("禁用成功");
             }
         }
+
+
+        public class StarClassHelp
+        {
+            [SZColumn(MaxLength = 255)]
+            public string CODE { get; set; }
+            [SZColumn(MaxLength = 255)]
+            public string NAME { get; set; }
+            [SZColumn(MaxLength = 255)]
+            public string PORTION { get; set; }
+        }
+
 
     }
 }
